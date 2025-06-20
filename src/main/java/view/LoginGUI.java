@@ -112,6 +112,8 @@ public class LoginGUI extends JFrame {
                 JOptionPane.showMessageDialog(this, "Redirecionando para a tela do Cliente.", "Informação", JOptionPane.INFORMATION_MESSAGE);
             } else if (usuarioLogado instanceof main.java.model.Gestor) {
                 JOptionPane.showMessageDialog(this, "Redirecionando para a tela do Gestor.", "Informação", JOptionPane.INFORMATION_MESSAGE);
+
+                new ProdutoGUI().setVisible(true);
             }
             dispose();
         } catch (AutenticacaoException ex) {
@@ -123,7 +125,7 @@ public class LoginGUI extends JFrame {
     }
 
     private void openRegisterScreen() {
-        RegisterGUI registerGUI = new RegisterGUI(autenticacaoService, null);
+        RegisterGUI registerGUI = new RegisterGUI(autenticacaoService, this);
         registerGUI.setVisible(true);
         this.setVisible(false);
     }
