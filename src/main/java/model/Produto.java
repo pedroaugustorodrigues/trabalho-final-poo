@@ -5,6 +5,9 @@ import java.io.Serializable;
 public class Produto implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private static int proximoId = 1;
+
+    private int id;
     private String descricao;
     private String categoria;
     private String marca;
@@ -12,6 +15,7 @@ public class Produto implements Serializable {
     private int qtd;
 
     public Produto(String descricao, String categoria, String marca, double preco, int qtd) {
+        this.id = proximoId++;
         this.descricao = descricao;
         this.categoria = categoria;
         this.marca = marca;
@@ -20,6 +24,8 @@ public class Produto implements Serializable {
     }
 
     // Getters e Setters
+    public int getId() { return id; }
+
     public String getDescricao() { return descricao; }
 
     public void setDescricao(String descricao) { this.descricao = descricao; }
@@ -42,6 +48,6 @@ public class Produto implements Serializable {
 
     @Override
     public String toString() {
-        return descricao + " (" + marca + ") - R$" + preco + " [" + qtd + " un.]";
+        return "[" + id + "] - " + descricao + " (" + marca + ") - R$" + preco + " [" + qtd + " un.]";
     }
 }

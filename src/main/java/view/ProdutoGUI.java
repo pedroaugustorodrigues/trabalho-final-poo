@@ -4,19 +4,68 @@ import main.java.model.Produto;
 import main.java.repository.ProdutoRepository;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.util.Optional;
 
 public class ProdutoGUI extends JFrame {
     private ProdutoRepository repo = new ProdutoRepository();
-    private DefaultListModel<Produto> listModel = new DefaultListModel<>();
-    private JList<Produto> listaProdutos = new JList<>(listModel);
+    private DefaultTableModel tabelaModel;
+    private JTable tabelaProdutos;
 
     public ProdutoGUI() {
-        setTitle("Gerenciar Produtos");
-        setSize(500, 400);
+        setTitle("Gerenciamento de Produtos");
+        setSize(700, 400);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        String[] colunas = {"ID", "Descrição", "Categoria", "Marca", "Preço", "Qtd"};
+        tabelaModel = new DefaultTableModel(colunas, 0) {
+            public boolean isCellEditable(int row, int column) {
+                return false; // impede edição direta na tabela
+            }
+        };
+
+        tabelaProdutos = new JTable(tabelaModel);
+
+        tabelaProdutos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // desativa redimensionamento automático
+
+        tabelaProdutos.getColumnModel().getColumn(0).setPreferredWidth(50);  // ID
+        tabelaProdutos.getColumnModel().getColumn(1).setPreferredWidth(220); // Descrição
+        tabelaProdutos.getColumnModel().getColumn(2).setPreferredWidth(130); // Categoria
+        tabelaProdutos.getColumnModel().getColumn(3).setPreferredWidth(130); // Marca
+        tabelaProdutos.getColumnModel().getColumn(4).setPreferredWidth(80);  // Preço
+        tabelaProdutos.getColumnModel().getColumn(5).setPreferredWidth(70);  // Qtd
+
+        // Impede redimensionamento das colunas
+        tabelaProdutos.getTableHeader().setResizingAllowed(false);
+        // Impede reordenação das colunas (arrastar cabeçalho)
+        tabelaProdutos.getTableHeader().setReorderingAllowed(false);
+
+        tabelaProdutos.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent e) {
+                int row = tabelaProdutos.rowAtPoint(e.getPoint());
+                int column = tabelaProdutos.columnAtPoint(e.getPoint());
+                if (row > -1 && column == 1) { // coluna 1 = Descrição
+                    Object value = tabelaProdutos.getValueAt(row, column);
+                    if (value != null) {
+                        tabelaProdutos.setToolTipText(value.toString());
+                    }
+                } else {
+                    tabelaProdutos.setToolTipText(null);
+                }
+            }
+        });
+
+        // Centraliza colunas ID e Qtd
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        tabelaProdutos.getColumnModel().getColumn(0).setCellRenderer(centerRenderer); // ID
+        tabelaProdutos.getColumnModel().getColumn(5).setCellRenderer(centerRenderer); // Qtd
+
+        carregarProdutosNaTabela();
 
         JButton btnAdicionar = new JButton("Adicionar");
         JButton btnEditar = new JButton("Editar");
@@ -31,33 +80,70 @@ public class ProdutoGUI extends JFrame {
         painelBotoes.add(btnEditar);
         painelBotoes.add(btnRemover);
 
-        add(new JScrollPane(listaProdutos), BorderLayout.CENTER);
+        add(new JScrollPane(tabelaProdutos), BorderLayout.CENTER);
         add(painelBotoes, BorderLayout.SOUTH);
+    }
+
+    private void carregarProdutosNaTabela() {
+        for (Produto p : repo.listar()) {
+            tabelaModel.addRow(new Object[]{
+                    p.getId(),
+                    p.getDescricao(),
+                    p.getCategoria(),
+                    p.getMarca(),
+                    String.format("R$ %.2f", p.getPreco()),
+                    p.getQtd()
+            });
+        }
     }
 
     private void adicionarProduto() {
         Produto p = dialogProduto(null);
         if (p != null) {
             repo.adicionar(p);
-            listModel.addElement(p);
+            tabelaModel.addRow(new Object[]{
+                    p.getId(),
+                    p.getDescricao(),
+                    p.getCategoria(),
+                    p.getMarca(),
+                    String.format("R$ %.2f", p.getPreco()),
+                    p.getQtd()
+            });
         }
     }
 
     private void editarProduto() {
-        Produto selecionado = listaProdutos.getSelectedValue();
-        if (selecionado != null) {
-            Produto editado = dialogProduto(selecionado);
-            if (editado != null) {
-                listModel.setElementAt(editado, listaProdutos.getSelectedIndex());
+        int selectedRow = tabelaProdutos.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) tabelaModel.getValueAt(selectedRow, 0);
+            Optional<Produto> opt = repo.listar().stream().filter(p -> p.getId() == id).findFirst();
+            if (opt.isPresent()) {
+                Produto original = opt.get();
+                Produto editado = dialogProduto(original);
+                if (editado != null) {
+                    tabelaModel.setValueAt(editado.getDescricao(), selectedRow, 1);
+                    tabelaModel.setValueAt(editado.getCategoria(), selectedRow, 2);
+                    tabelaModel.setValueAt(editado.getMarca(), selectedRow, 3);
+                    tabelaModel.setValueAt(String.format("R$ %.2f", editado.getPreco()), selectedRow, 4);
+                    tabelaModel.setValueAt(editado.getQtd(), selectedRow, 5);
+                }
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um produto para editar.");
         }
     }
 
     private void removerProduto() {
-        Produto selecionado = listaProdutos.getSelectedValue();
-        if (selecionado != null) {
-            repo.remover(selecionado);
-            listModel.removeElement(selecionado);
+        int selectedRow = tabelaProdutos.getSelectedRow();
+        if (selectedRow != -1) {
+            int id = (int) tabelaModel.getValueAt(selectedRow, 0);
+            Optional<Produto> opt = repo.listar().stream().filter(p -> p.getId() == id).findFirst();
+            if (opt.isPresent()) {
+                repo.remover(opt.get());
+                tabelaModel.removeRow(selectedRow);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecione um produto para remover.");
         }
     }
 
