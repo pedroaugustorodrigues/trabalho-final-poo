@@ -113,7 +113,8 @@ public class LoginGUI extends JFrame {
             } else if (usuarioLogado instanceof main.java.model.Gestor) {
                 JOptionPane.showMessageDialog(this, "Redirecionando para a tela do Gestor.", "Informação", JOptionPane.INFORMATION_MESSAGE);
 
-                new ProdutoGUI().setVisible(true);
+                new GestorDashboardGUI().setVisible(true);
+
             }
             dispose();
         } catch (AutenticacaoException ex) {
