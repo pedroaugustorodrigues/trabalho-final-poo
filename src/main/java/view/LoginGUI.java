@@ -5,94 +5,188 @@ import main.java.model.Usuario;
 import main.java.exceptions.AutenticacaoException;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
 
 public class LoginGUI extends JFrame {
     private AutenticacaoService autenticacaoService;
     private JTextField emailField;
     private JPasswordField senhaField;
-    private JButton loginButton;
-    private JButton registerButton;
+    private Point initialClick;
+
+    private static final Color COR_PAINEL_ESQUERDO = new Color(108, 99, 255);
+    private static final Color COR_BOTAO_LOGIN = new Color(108, 99, 255);
+    private static final Color COR_TEXTO_BOTAO = Color.WHITE;
+    private static final Color COR_FUNDO_DIREITO = Color.WHITE;
 
     public LoginGUI(AutenticacaoService autenticacaoService) {
         this.autenticacaoService = autenticacaoService;
-        setTitle("Sistema de Vendas de Eletrônicos - Login");
-        setSize(400, 250);
+        setTitle("Login");
+        setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setUndecorated(true);
 
-        initComponents();
-        addListeners();
+        setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
+
+        JPanel mainPanel = new JPanel(new GridLayout(1, 2));
+        
+        addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                initialClick = e.getPoint();
+                getComponentAt(initialClick);
+            }
+        });
+        addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                int thisX = getLocation().x;
+                int thisY = getLocation().y;
+
+                int xMoved = e.getX() - initialClick.x;
+                int yMoved = e.getY() - initialClick.y;
+
+                int X = thisX + xMoved;
+                int Y = thisY + yMoved;
+                setLocation(X, Y);
+            }
+        });
+
+        mainPanel.add(createLeftPanel());
+        mainPanel.add(createRightPanel());
+
+        add(mainPanel);
     }
 
-    private void initComponents() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    private JPanel createLeftPanel() {
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.setBackground(COR_PAINEL_ESQUERDO);
+        leftPanel.setBorder(new EmptyBorder(50, 50, 50, 50));
+
+        JLabel welcomeLabel = new JLabel("<html>Bem vindo ao<br>Sistema.</html>", SwingConstants.LEFT);
+        welcomeLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
+        welcomeLabel.setForeground(Color.WHITE);
+        leftPanel.add(welcomeLabel, BorderLayout.NORTH);
+
+        try {
+            ImageIcon originalIcon = new ImageIcon("src/main/resources/images/illustration.png");
+            Image scaledImage = originalIcon.getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
+            JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
+            leftPanel.add(imageLabel, BorderLayout.CENTER);
+        } catch (Exception e) {
+            JLabel errorLabel = new JLabel("Imagem não carregada");
+            errorLabel.setForeground(Color.RED);
+            leftPanel.add(errorLabel, BorderLayout.CENTER);
+        }
+
+        return leftPanel;
+    }
+
+    private JPanel createRightPanel() {
+        JPanel rightPanel = new JPanel();
+        rightPanel.setBackground(COR_FUNDO_DIREITO);
+        rightPanel.setLayout(new GridBagLayout());
+        rightPanel.setBorder(new EmptyBorder(20, 40, 20, 40));
+
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(10, 5, 10, 5);
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
 
-        // Email
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel.add(new JLabel("Email:"), gbc);
+        JButton exitButton = createExitButton();
+        gbc.anchor = GridBagConstraints.NORTHEAST;
+        rightPanel.add(exitButton, gbc);
 
-        gbc.gridx = 1;
-        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
+        
+        JLabel titleLabel = new JLabel("Acessar");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
+        titleLabel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.DARK_GRAY));
+        gbc.weighty = 0.1;
+        rightPanel.add(titleLabel, gbc);
+
         emailField = new JTextField(20);
-        panel.add(emailField, gbc);
+        JPanel emailPanel = createInputPanelWithIcon("/images/user-icon.png", emailField);
+        gbc.weighty = 0.2;
+        rightPanel.add(emailPanel, gbc);
 
-        // Senha
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.NONE;
-        panel.add(new JLabel("Senha:"), gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         senhaField = new JPasswordField(20);
-        panel.add(senhaField, gbc);
+        JPanel senhaPanel = createInputPanelWithIcon("/images/lock-icon.png", senhaField);
+        rightPanel.add(senhaPanel, gbc);
 
-        // Botão Login
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2; // Ocupa duas colunas
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.anchor = GridBagConstraints.CENTER;
-        loginButton = new JButton("Login");
-        panel.add(loginButton, gbc);
+        gbc.weighty = 0.4;
+        rightPanel.add(new JLabel(), gbc);
 
-        // Botão Cadastre-se
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        registerButton = new JButton("Não tem conta? Cadastre-se!");
-        panel.add(registerButton, gbc);
+        JButton loginButton = createRoundedButton("Login");
+        loginButton.addActionListener(_ -> performLogin());
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.ipady = 15;
+        gbc.weighty = 0.1;
+        gbc.anchor = GridBagConstraints.SOUTH;
+        rightPanel.add(loginButton, gbc);
 
-        add(panel);
+        return rightPanel;
+    }
+    
+    private JPanel createInputPanelWithIcon(String iconPath, JTextField textField) {
+        JPanel panel = new JPanel(new BorderLayout(10, 0));
+        panel.setOpaque(false);
+
+        try {
+            ImageIcon icon = new ImageIcon("src/main/resources" + iconPath);
+            Image scaled = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+            panel.add(new JLabel(new ImageIcon(scaled)), BorderLayout.WEST);
+        } catch (Exception e) {
+             panel.add(new JLabel("?"), BorderLayout.WEST);
+        }
+        
+        textField.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        textField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY));
+        panel.add(textField, BorderLayout.CENTER);
+        
+        return panel;
     }
 
-    private void addListeners() {
-        loginButton.addActionListener(new ActionListener() {
+    private JButton createRoundedButton(String text) {
+        JButton button = new JButton(text) {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                performLogin();
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 20, 20));
+                g2.setColor(getForeground());
+                g2.drawString(getText(), (getWidth() - g.getFontMetrics().stringWidth(getText())) / 2, (getHeight() + g.getFontMetrics().getAscent()) / 2 - 2);
+                g2.dispose();
             }
-        });
-
-        registerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openRegisterScreen();
-            }
-        });
+        };
+        button.setBackground(COR_BOTAO_LOGIN);
+        button.setForeground(COR_TEXTO_BOTAO);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        return button;
+    }
+    
+    private JButton createExitButton() {
+        JButton button = new JButton();
+        try {
+            ImageIcon icon = new ImageIcon("src/main/resources/images/power-off-icon.png");
+            Image scaled = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+            button.setIcon(new ImageIcon(scaled));
+        } catch (Exception e) {
+            button.setText("X");
+        }
+        button.setBorder(BorderFactory.createEmptyBorder());
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.addActionListener(_ -> System.exit(0));
+        return button;
     }
 
     private void performLogin() {
@@ -106,28 +200,20 @@ public class LoginGUI extends JFrame {
 
         try {
             Usuario usuarioLogado = autenticacaoService.login(email, senha);
-            JOptionPane.showMessageDialog(this, "Login bem-sucedido! Bem-vindo, " + usuarioLogado.getNome() + " (" + usuarioLogado.getTipoUsuario() + ")", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             
-            if (usuarioLogado instanceof main.java.model.Cliente) {
-                JOptionPane.showMessageDialog(this, "Redirecionando para a tela do Cliente.", "Informação", JOptionPane.INFORMATION_MESSAGE);
-            } else if (usuarioLogado instanceof main.java.model.Gestor) {
-                JOptionPane.showMessageDialog(this, "Redirecionando para a tela do Gestor.", "Informação", JOptionPane.INFORMATION_MESSAGE);
-
-                new GestorDashboardGUI().setVisible(true);
-
-            }
             dispose();
+
+            if (usuarioLogado instanceof main.java.model.Gestor) {
+                new GestorDashboardGUI(usuarioLogado).setVisible(true);
+            } else {
+                 JOptionPane.showMessageDialog(null, "Login de cliente realizado com sucesso!", "Bem-vindo!", JOptionPane.INFORMATION_MESSAGE);
+            }
+
         } catch (AutenticacaoException ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro de Autenticação", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Erro de Login", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Ocorreu um erro inesperado: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         }
-    }
-
-    private void openRegisterScreen() {
-        RegisterGUI registerGUI = new RegisterGUI(autenticacaoService, this);
-        registerGUI.setVisible(true);
-        this.setVisible(false);
     }
 }

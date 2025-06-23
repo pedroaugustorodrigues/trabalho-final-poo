@@ -36,7 +36,6 @@ public class RegisterGUI extends JDialog {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Nome
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
@@ -48,7 +47,6 @@ public class RegisterGUI extends JDialog {
         nomeField = new JTextField(20);
         panel.add(nomeField, gbc);
 
-        // Email
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
@@ -61,7 +59,6 @@ public class RegisterGUI extends JDialog {
         emailField = new JTextField(20);
         panel.add(emailField, gbc);
 
-        // Senha
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.WEST;
@@ -74,7 +71,6 @@ public class RegisterGUI extends JDialog {
         senhaField = new JPasswordField(20);
         panel.add(senhaField, gbc);
 
-        // Tipo de Usuário
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.WEST;
@@ -87,7 +83,6 @@ public class RegisterGUI extends JDialog {
         tipoUsuarioComboBox = new JComboBox<>(new String[]{"Cliente", "Gestor"});
         panel.add(tipoUsuarioComboBox, gbc);
 
-        // Botão Cadastrar
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
@@ -96,7 +91,6 @@ public class RegisterGUI extends JDialog {
         registerButton = new JButton("Cadastrar");
         panel.add(registerButton, gbc);
 
-        // Botão Voltar
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 2;

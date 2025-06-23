@@ -40,4 +40,19 @@ public class AutenticacaoService {
         }
         return usuario;
     }
+
+    public boolean autenticar(String email, String senha) {
+        try {
+            Usuario usuario = usuarioRepository.buscarPorEmail(email)
+                    .orElse(null);
+            
+            if (usuario == null) {
+                return false;
+            }
+            
+            return usuario.getSenha().equals(senha);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }   
