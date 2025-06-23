@@ -122,7 +122,7 @@ public class LoginGUI extends JFrame {
         rightPanel.add(new JLabel(), gbc);
 
         JButton loginButton = createRoundedButton("Login");
-        loginButton.addActionListener(_ -> performLogin());
+        loginButton.addActionListener(e -> performLogin());
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.ipady = 15;
         gbc.weighty = 0.1;
@@ -185,7 +185,7 @@ public class LoginGUI extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder());
         button.setContentAreaFilled(false);
         button.setFocusPainted(false);
-        button.addActionListener(_ -> System.exit(0));
+        button.addActionListener(e -> System.exit(0));
         return button;
     }
 
@@ -205,8 +205,8 @@ public class LoginGUI extends JFrame {
 
             if (usuarioLogado instanceof main.java.model.Gestor) {
                 new GestorDashboardGUI(usuarioLogado).setVisible(true);
-            } else {
-                 JOptionPane.showMessageDialog(null, "Login de cliente realizado com sucesso!", "Bem-vindo!", JOptionPane.INFORMATION_MESSAGE);
+            } else if (usuarioLogado instanceof main.java.model.Cliente) {
+                new ClienteDashboardGUI().setVisible(true);
             }
 
         } catch (AutenticacaoException ex) {
