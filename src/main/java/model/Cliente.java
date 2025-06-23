@@ -6,14 +6,12 @@ public class Cliente extends Usuario {
     private String cpf;
     private String celular;
 
-    // Construtor usado no ClienteGUI (com CPF e celular)
     public Cliente(String nome, String cpf, String email, String celular, String senha) {
         super(nome, email, senha);
         this.cpf = cpf;
         this.celular = celular;
     }
 
-    // Construtor usado no AutenticacaoService (sem CPF e celular)
     public Cliente(String nome, String email, String senha) {
         super(nome, email, senha);
         this.cpf = "não informado";

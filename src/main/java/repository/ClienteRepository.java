@@ -35,6 +35,15 @@ public class ClienteRepository {
         salvarNoArquivo();
     }
 
+    public Cliente buscarPorCpf(String cpf) {
+        for (Cliente cliente : clientes) {
+            if (cliente.getCpf().equals(cpf)) {
+                return cliente;
+            }
+        }
+        return null;
+    }
+
     public List<Cliente> listar() {
         return clientes;
     }
