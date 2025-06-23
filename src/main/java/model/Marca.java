@@ -25,7 +25,8 @@ public class Marca implements Serializable {
     public int getId() {
         return id;
     }
-    
+    public void setId(int id) { this.id = id; }
+
     public String getNome() {
         return nome;
     }
@@ -51,4 +52,4 @@ public class Marca implements Serializable {
     public int hashCode() {
         return Integer.hashCode(id);
     }
-} 
+}
