@@ -8,19 +8,21 @@ import java.util.List;
 import java.util.Optional;
 
 public class UsuarioRepository {
-    private static final String NOME_ARQUIVO = "usuarios.dat";
+    private final String nomeArquivo;
     private List<Usuario> usuarios;
 
+    // Construtor padrão — mantém compatibilidade com o sistema existente
     public UsuarioRepository() {
+        this("usuarios.dat");
+    }
+
+    // Construtor alternativo — útil para testes com arquivos separados
+    public UsuarioRepository(String nomeArquivo) {
+        this.nomeArquivo = nomeArquivo;
         this.usuarios = carregarUsuarios();
-        
-        int maxId = 0;
-        for (Usuario u : usuarios) {
-            if (u.getId() > maxId) {
-                maxId = u.getId();
-            }
-        }
-        Usuario.setProximoId(maxId); 
+
+        int maxId = usuarios.stream().mapToInt(Usuario::getId).max().orElse(0);
+        Usuario.setProximoId(maxId);
     }
 
     public void adicionarUsuario(Usuario usuario) {
@@ -64,7 +66,7 @@ public class UsuarioRepository {
 
     @SuppressWarnings("unchecked")
     private List<Usuario> carregarUsuarios() {
-        File arquivo = new File(NOME_ARQUIVO);
+        File arquivo = new File(nomeArquivo);
         if (!arquivo.exists()) {
             return new ArrayList<>();
         }
@@ -78,7 +80,7 @@ public class UsuarioRepository {
     }
 
     private void salvarUsuarios() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(NOME_ARQUIVO))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(nomeArquivo))) {
             oos.writeObject(usuarios);
         } catch (IOException e) {
             System.err.println("Erro ao salvar usuários no arquivo: " + e.getMessage());
