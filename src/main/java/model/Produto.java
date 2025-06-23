@@ -9,12 +9,12 @@ public class Produto implements Serializable {
 
     private int id;
     private String descricao;
-    private String categoria;
-    private String marca;
+    private Categoria categoria;
+    private Marca marca;
     private double preco;
     private int qtd;
 
-    public Produto(String descricao, String categoria, String marca, double preco, int qtd) {
+    public Produto(String descricao, Categoria categoria, Marca marca, double preco, int qtd) {
         this.id = proximoId++;
         this.descricao = descricao;
         this.categoria = categoria;
@@ -23,20 +23,28 @@ public class Produto implements Serializable {
         this.qtd = qtd;
     }
 
-    // Getters e Setters
+    public Produto(String descricao, String categoria, String marca, double preco, int qtd) {
+        this.id = proximoId++;
+        this.descricao = descricao;
+        this.categoria = new Categoria(categoria);
+        this.marca = new Marca(marca);
+        this.preco = preco;
+        this.qtd = qtd;
+    }
+
     public int getId() { return id; }
 
     public String getDescricao() { return descricao; }
 
     public void setDescricao(String descricao) { this.descricao = descricao; }
 
-    public String getCategoria() { return categoria; }
+    public Categoria getCategoria() { return categoria; }
 
-    public void setCategoria(String categoria) { this.categoria = categoria; }
+    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
 
-    public String getMarca() { return marca; }
+    public Marca getMarca() { return marca; }
 
-    public void setMarca(String marca) { this.marca = marca; }
+    public void setMarca(Marca marca) { this.marca = marca; }
 
     public double getPreco() { return preco; }
 
@@ -48,6 +56,6 @@ public class Produto implements Serializable {
 
     @Override
     public String toString() {
-        return "[" + id + "] - " + descricao + " (" + marca + ") - R$" + preco + " [" + qtd + " un.]";
+        return "[" + id + "] - " + descricao + " (" + marca.getNome() + ") - R$" + preco + " [" + qtd + " un.]";
     }
 }

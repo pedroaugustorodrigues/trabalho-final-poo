@@ -18,7 +18,6 @@ public abstract class Usuario implements Serializable {
         this.senha = senha;
     }
 
-
     public int getId() {
         return id;
     }
@@ -47,7 +46,6 @@ public abstract class Usuario implements Serializable {
         this.senha = senha;
     }
 
-    
     public abstract String getTipoUsuario();
 
     @Override
@@ -55,12 +53,10 @@ public abstract class Usuario implements Serializable {
         return "ID: " + id + ", Nome: " + nome + ", Email: " + email;
     }
 
-
     public static void resetProximoId() {
         proximoId = 1;
     }
 
-   
     public static void setProximoId(int ultimoId) {
         if (ultimoId >= proximoId) {
             proximoId = ultimoId + 1;
