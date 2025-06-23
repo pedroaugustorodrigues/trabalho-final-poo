@@ -8,13 +8,10 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        
         UsuarioRepository usuarioRepository = new UsuarioRepository();
 
-        
         AutenticacaoService autenticacaoService = new AutenticacaoService(usuarioRepository);
 
-        
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
