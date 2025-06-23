@@ -13,25 +13,41 @@ public class Produto implements Serializable {
     private Marca marca;
     private double preco;
     private int qtd;
+    private String caminhoImagem; // NOVO
 
-    public Produto(String descricao, Categoria categoria, Marca marca, double preco, int qtd) {
+    // Construtor com imagem
+    public Produto(String descricao, Categoria categoria, Marca marca, double preco, int qtd, String caminhoImagem) {
         this.id = proximoId++;
         this.descricao = descricao;
         this.categoria = categoria;
         this.marca = marca;
         this.preco = preco;
         this.qtd = qtd;
+        this.caminhoImagem = caminhoImagem;
     }
 
-    public Produto(String descricao, String categoria, String marca, double preco, int qtd) {
+    // Construtor sem imagem (mantido)
+    public Produto(String descricao, Categoria categoria, Marca marca, double preco, int qtd) {
+        this(descricao, categoria, marca, preco, qtd, null);
+    }
+
+    // Construtor alternativo (categoria/marca como String) com imagem
+    public Produto(String descricao, String categoria, String marca, double preco, int qtd, String caminhoImagem) {
         this.id = proximoId++;
         this.descricao = descricao;
         this.categoria = new Categoria(categoria);
         this.marca = new Marca(marca);
         this.preco = preco;
         this.qtd = qtd;
+        this.caminhoImagem = caminhoImagem;
     }
 
+    // Construtor alternativo sem imagem
+    public Produto(String descricao, String categoria, String marca, double preco, int qtd) {
+        this(descricao, categoria, marca, preco, qtd, null);
+    }
+
+    // Getters/Setters
     public int getId() { return id; }
 
     public String getDescricao() { return descricao; }
@@ -53,6 +69,10 @@ public class Produto implements Serializable {
     public int getQtd() { return qtd; }
 
     public void setQtd(int qtd) { this.qtd = qtd; }
+
+    public String getCaminhoImagem() { return caminhoImagem; }
+
+    public void setCaminhoImagem(String caminhoImagem) { this.caminhoImagem = caminhoImagem; }
 
     @Override
     public String toString() {

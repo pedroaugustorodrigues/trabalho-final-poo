@@ -114,7 +114,7 @@ public class GestorDashboardGUI extends JFrame {
         button.putClientProperty("cardName", cardName);
         sidebarButtons.add(button);
 
-        button.addActionListener(_ -> {
+        button.addActionListener(e -> {
             selectedSidebar = cardName;
             for (JButton btn : sidebarButtons) {
                 String btnCard = (String) btn.getClientProperty("cardName");
@@ -422,4 +422,6 @@ public class GestorDashboardGUI extends JFrame {
 
         return titleBar;
     }
+
+
 }

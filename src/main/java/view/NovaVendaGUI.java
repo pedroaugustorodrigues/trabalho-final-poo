@@ -79,7 +79,7 @@ private void initComponents() {
 
         gbc.gridx = 2; gbc.gridy = 0; gbc.weightx = 0;
         JButton buscarClienteBtn = new JButton("Pesquisar");
-        buscarClienteBtn.addActionListener(_ -> buscarCliente());
+        buscarClienteBtn.addActionListener(e -> buscarCliente());
         panel.add(buscarClienteBtn, gbc);
 
         gbc.gridx = 0; gbc.gridy = 1;
@@ -107,7 +107,7 @@ private void initComponents() {
 
         gbc.gridx = 3; gbc.gridy = 0;
         JButton buscarProdutoBtn = new JButton("Pesquisar");
-        buscarProdutoBtn.addActionListener(_ -> buscarProduto());
+        buscarProdutoBtn.addActionListener(e -> buscarProduto());
         panel.add(buscarProdutoBtn, gbc);
 
         gbc.gridwidth = 1;
@@ -140,7 +140,7 @@ private void initComponents() {
 
         gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 4; gbc.fill = GridBagConstraints.NONE; gbc.anchor = GridBagConstraints.CENTER;
         JButton addCarrinhoBtn = new JButton("Adicionar ao Carrinho");
-        addCarrinhoBtn.addActionListener(_ -> adicionarAoCarrinho());
+        addCarrinhoBtn.addActionListener(e -> adicionarAoCarrinho());
         panel.add(addCarrinhoBtn, gbc);
 
         return panel;
@@ -175,12 +175,12 @@ private void initComponents() {
         JButton pagamentoBtn = new JButton("Pagamento");
         pagamentoBtn.setBackground(new Color(46, 204, 113));
         pagamentoBtn.setForeground(Color.WHITE);
-        pagamentoBtn.addActionListener(_ -> finalizarVenda());
+        pagamentoBtn.addActionListener(e -> finalizarVenda());
 
         JButton cancelarBtn = new JButton("Cancelar Venda");
         cancelarBtn.setBackground(new Color(231, 76, 60));
         cancelarBtn.setForeground(Color.WHITE);
-        cancelarBtn.addActionListener(_ -> dispose());
+        cancelarBtn.addActionListener(e -> dispose());
         
         panel.add(pagamentoBtn);
         panel.add(cancelarBtn);
