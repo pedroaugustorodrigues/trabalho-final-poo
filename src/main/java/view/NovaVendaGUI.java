@@ -16,14 +16,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Modal para registrar uma nova venda.
+ * Permite buscar cliente, adicionar produtos ao carrinho, calcular total e finalizar a venda.
+ *
+ * @author Pedro
+ */
 public class NovaVendaGUI extends JDialog {
-    private ClienteRepository clienteRepository = new ClienteRepository();
-    private ProdutoRepository produtoRepository = new ProdutoRepository();
-    private VendaRepository vendaRepository = new VendaRepository();
+    private final ClienteRepository clienteRepository = new ClienteRepository();
+    private final ProdutoRepository produtoRepository = new ProdutoRepository();
+    private final VendaRepository vendaRepository = new VendaRepository();
 
     private Cliente clienteSelecionado;
     private Produto produtoSelecionado;
-    private List<ItemVenda> carrinho = new ArrayList<>();
+    private final List<ItemVenda> carrinho = new ArrayList<>();
 
     private JTextField cpfField, nomeClienteField;
     private JTextField codProdutoField, nomeProdutoField, marcaField, tamanhoField, corField, precoField, qtdField;
@@ -31,39 +37,53 @@ public class NovaVendaGUI extends JDialog {
     private DefaultTableModel carrinhoTableModel;
     private JTable carrinhoTable;
 
-public NovaVendaGUI(Frame owner) {
-    super(owner, "Nova Venda", true);
-    initComponents();
-}
+    /**
+     * Cria o modal de nova venda.
+     * @param owner janela pai (Frame)
+     */
+    public NovaVendaGUI(Frame owner) {
+        super(owner, "Nova Venda", true);
+        initComponents();
+    }
 
-public NovaVendaGUI(Dialog owner) {
-    super(owner, "Nova Venda", true);
-    initComponents();
-}
+    /**
+     * Cria o modal de nova venda.
+     * @param owner janela pai (Dialog)
+     */
+    public NovaVendaGUI(Dialog owner) {
+        super(owner, "Nova Venda", true);
+        initComponents();
+    }
 
-private void initComponents() {
-    setSize(900, 650);
-    setLocationRelativeTo(getOwner());
-    setLayout(new BorderLayout(10, 10));
+    /**
+     * Inicializa os componentes e layout da tela.
+     */
+    private void initComponents() {
+        setSize(900, 650);
+        setLocationRelativeTo(getOwner());
+        setLayout(new BorderLayout(10, 10));
 
-    JPanel topPanel = new JPanel(new GridLayout(1, 2, 10, 10));
-    topPanel.add(createClientePanel());
-    topPanel.add(createProdutoPanel());
+        JPanel topPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        topPanel.add(createClientePanel());
+        topPanel.add(createProdutoPanel());
 
-    JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
-    centerPanel.add(createCarrinhoPanel(), BorderLayout.CENTER);
+        JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
+        centerPanel.add(createCarrinhoPanel(), BorderLayout.CENTER);
 
-    JPanel bottomPanel = new JPanel(new BorderLayout(10, 10));
-    bottomPanel.add(createTotalPanel(), BorderLayout.WEST);
-    bottomPanel.add(createActionsPanel(), BorderLayout.EAST);
+        JPanel bottomPanel = new JPanel(new BorderLayout(10, 10));
+        bottomPanel.add(createTotalPanel(), BorderLayout.WEST);
+        bottomPanel.add(createActionsPanel(), BorderLayout.EAST);
 
-    add(topPanel, BorderLayout.NORTH);
-    add(centerPanel, BorderLayout.CENTER);
-    add(bottomPanel, BorderLayout.SOUTH);
-    
-    ((JPanel)getContentPane()).setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-}
+        add(topPanel, BorderLayout.NORTH);
+        add(centerPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
+        
+        ((JPanel)getContentPane()).setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    }
 
+    /**
+     * Cria o painel de busca e exibição de dados do cliente.
+     */
     @SuppressWarnings("unused")
     private JPanel createClientePanel() {
         JPanel panel = new JPanel(new GridBagLayout());
@@ -93,6 +113,9 @@ private void initComponents() {
         return panel;
     }
 
+    /**
+     * Cria o painel de busca e exibição de dados do produto.
+     */
     @SuppressWarnings("unused")
     private JPanel createProdutoPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
@@ -148,6 +171,9 @@ private void initComponents() {
         return panel;
     }
 
+    /**
+     * Cria o painel do carrinho de compras.
+     */
     private JPanel createCarrinhoPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(new TitledBorder("Carrinho de Compras"));
@@ -163,6 +189,9 @@ private void initComponents() {
         return panel;
     }
     
+    /**
+     * Cria o painel que exibe o total da venda.
+     */
     private JPanel createTotalPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel.setBorder(new TitledBorder("Total da Venda"));
@@ -172,6 +201,9 @@ private void initComponents() {
         return panel;
     }
 
+    /**
+     * Cria o painel de ações (pagamento/cancelar).
+     */
     @SuppressWarnings("unused")
     private JPanel createActionsPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -190,6 +222,9 @@ private void initComponents() {
         return panel;
     }
 
+    /**
+     * Busca o cliente pelo CPF informado.
+     */
     private void buscarCliente() {
         String cpf = cpfField.getText();
         Optional<Cliente> clienteOpt = clienteRepository.listar().stream()
@@ -204,6 +239,9 @@ private void initComponents() {
         }
     }
 
+    /**
+     * Busca o produto pelo código informado.
+     */
     private void buscarProduto() {
         try {
             int cod = Integer.parseInt(codProdutoField.getText());
@@ -222,6 +260,9 @@ private void initComponents() {
         }
     }
 
+    /**
+     * Adiciona o produto selecionado ao carrinho.
+     */
     private void adicionarAoCarrinho() {
         if (produtoSelecionado == null) {
             JOptionPane.showMessageDialog(this, "Selecione um produto.");
@@ -263,11 +304,17 @@ private void initComponents() {
         }
     }
 
+    /**
+     * Atualiza o valor total da venda.
+     */
     private void atualizarTotal() {
         double total = carrinho.stream().mapToDouble(ItemVenda::getSubtotal).sum();
         totalVendaLabel.setText(String.format("R$ %.2f", total));
     }
     
+    /**
+     * Limpa os campos do produto após adicionar ao carrinho.
+     */
     private void limparCamposProduto() {
         produtoSelecionado = null;
         codProdutoField.setText("");
@@ -279,6 +326,9 @@ private void initComponents() {
         qtdField.setText("1");
     }
 
+    /**
+     * Finaliza a venda, atualiza estoque e salva no repositório.
+     */
     private void finalizarVenda() {
         if (carrinho.isEmpty()) {
             JOptionPane.showMessageDialog(this, "O carrinho está vazio.");

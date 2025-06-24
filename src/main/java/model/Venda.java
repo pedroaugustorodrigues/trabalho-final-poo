@@ -4,16 +4,21 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Representa uma venda realizada por um cliente.
+ */
 public class Venda implements Serializable {
     private static final long serialVersionUID = 1L;
     private static int proximoId = 1;
-
     private int id;
     private Cliente cliente;
     private List<ItemVenda> itens;
     private double total;
     private LocalDateTime data;
 
+    /**
+     * Cria uma venda com cliente e itens.
+     */
     public Venda(Cliente cliente, List<ItemVenda> itens) {
         this.id = proximoId++;
         this.cliente = cliente;
@@ -23,7 +28,11 @@ public class Venda implements Serializable {
     }
 
     private double calcularTotal() {
-        return itens.stream().mapToDouble(ItemVenda::getSubtotal).sum();
+        double soma = 0;
+        for (ItemVenda item : itens) {
+            soma += item.getSubtotal();
+        }
+        return soma;
     }
     
     public static void setProximoId(int id) {

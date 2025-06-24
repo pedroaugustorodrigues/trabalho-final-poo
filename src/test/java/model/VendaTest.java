@@ -11,8 +11,8 @@ class VendaTest {
 
     @Test
     void testCalculoTotalVenda() {
-        Produto celular = new Produto("Celular", "Eletrônicos", "Samsung", 1500.0, 10);
-        Produto fone = new Produto("Fone", "Eletrônicos", "JBL", 500.0, 20);
+        Produto celular = new Produto("Celular", new Categoria("Eletrônicos"), new Marca("Samsung"), 1500.0, 10);
+        Produto fone = new Produto("Fone", new Categoria("Eletrônicos"), new Marca("JBL"), 500.0, 20);
 
         ItemVenda item1 = new ItemVenda(celular, 1, "Único", "Preto");
         ItemVenda item2 = new ItemVenda(fone, 2, "Único", "Branco");

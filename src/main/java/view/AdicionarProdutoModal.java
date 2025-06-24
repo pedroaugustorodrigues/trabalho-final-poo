@@ -13,14 +13,20 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Modal para cadastro de um novo produto.
+ * Exibe formulário para preenchimento dos dados obrigatórios e salva no repositório.
+ *
+ * @author Claudio
+ */
 public class AdicionarProdutoModal extends JDialog {
     // Cores da identidade visual
-    private final Color BACKGROUND_COLOR = new Color(240, 242, 245);
-    private final Color CARD_BG = Color.WHITE;
-    private final Color PRIMARY_COLOR = new Color(108, 99, 255);
-    private final Color ACCENT_COLOR = new Color(32, 201, 151);
-    private final Color DANGER_COLOR = new Color(230, 86, 86);
-    private final Color TEXT_COLOR = new Color(51, 51, 51);
+    private static final Color BACKGROUND_COLOR = new Color(240, 242, 245);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color PRIMARY_COLOR = new Color(108, 99, 255);
+    private static final Color ACCENT_COLOR = new Color(32, 201, 151);
+    private static final Color DANGER_COLOR = new Color(230, 86, 86);
+    private static final Color TEXT_COLOR = new Color(51, 51, 51);
 
     private JTextField txtDescricao;
     private JComboBox<Categoria> cbCategoria;
@@ -35,13 +41,16 @@ public class AdicionarProdutoModal extends JDialog {
     private JLabel lblPreviewImagem;
     private JButton btnSelecionarImagem;
 
-
-    private CategoriaRepository categoriaRepository;
-    private MarcaRepository marcaRepository;
-    private ProdutoRepository produtoRepository;
+    private final CategoriaRepository categoriaRepository;
+    private final MarcaRepository marcaRepository;
+    private final ProdutoRepository produtoRepository;
 
     private boolean produtoAdicionado = false;
 
+    /**
+     * Cria o modal de cadastro de produto.
+     * @param parent janela pai
+     */
     public AdicionarProdutoModal(Frame parent) {
         super(parent, "Adicionar Novo Produto", true);
 
@@ -59,6 +68,9 @@ public class AdicionarProdutoModal extends JDialog {
         setResizable(false);
     }
 
+    /**
+     * Inicializa os componentes do formulário.
+     */
     private void initComponents() {
         txtDescricao = createStyledTextField("", "Descrição do Produto");
 
@@ -118,6 +130,9 @@ public class AdicionarProdutoModal extends JDialog {
 
     }
 
+    /**
+     * Organiza o layout dos componentes na tela.
+     */
     private void setupLayout() {
         setLayout(new BorderLayout());
         getContentPane().setBackground(CARD_BG);
@@ -222,6 +237,9 @@ public class AdicionarProdutoModal extends JDialog {
 
     }
 
+    /**
+     * Cria um campo de texto estilizado com placeholder.
+     */
     private JTextField createStyledTextField(String text, String placeholder) {
         JTextField field = new JTextField(text);
         field.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -254,6 +272,9 @@ public class AdicionarProdutoModal extends JDialog {
         return field;
     }
 
+    /**
+     * Aplica estilo ao ComboBox.
+     */
     private void stylizeComboBox(JComboBox<?> comboBox) {
         comboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
         comboBox.setBorder(BorderFactory.createCompoundBorder(
@@ -262,6 +283,9 @@ public class AdicionarProdutoModal extends JDialog {
         ));
     }
 
+    /**
+     * Cria um JLabel estilizado para campos do formulário.
+     */
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -269,7 +293,9 @@ public class AdicionarProdutoModal extends JDialog {
         return label;
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Inicializa listeners dos botões e campos.
+     */
     private void setupListeners() {
         btnAdicionarCategoria.addActionListener(e -> adicionarCategoria());
         btnAdicionarMarca.addActionListener(e -> adicionarMarca());
@@ -316,6 +342,9 @@ public class AdicionarProdutoModal extends JDialog {
         });
     }
 
+    /**
+     * Carrega categorias e marcas nos ComboBoxes.
+     */
     private void carregarDados() {
         // Carregar categorias
         List<Categoria> categorias = categoriaRepository.listar();
@@ -331,6 +360,10 @@ public class AdicionarProdutoModal extends JDialog {
             cbMarca.addItem(marca);
         }
     }
+
+    /**
+     * Abre o seletor de imagem e exibe preview.
+     */
     private void selecionarImagem() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -344,7 +377,9 @@ public class AdicionarProdutoModal extends JDialog {
         }
     }
 
-
+    /**
+     * Adiciona uma nova categoria ao repositório e ComboBox.
+     */
     private void adicionarCategoria() {
         String nomeCategoria = JOptionPane.showInputDialog(this,
             "Digite o nome da nova categoria:",
@@ -359,6 +394,9 @@ public class AdicionarProdutoModal extends JDialog {
         }
     }
 
+    /**
+     * Adiciona uma nova marca ao repositório e ComboBox.
+     */
     private void adicionarMarca() {
         String nomeMarca = JOptionPane.showInputDialog(this,
             "Digite o nome da nova marca:",
@@ -373,6 +411,9 @@ public class AdicionarProdutoModal extends JDialog {
         }
     }
 
+    /**
+     * Salva o produto no repositório após validação dos campos.
+     */
     private void salvarProduto() {
         try {
             String descricao = txtDescricao.getText().trim();
@@ -430,7 +471,10 @@ public class AdicionarProdutoModal extends JDialog {
         }
     }
 
-
+    /**
+     * Indica se um produto foi adicionado com sucesso.
+     * @return true se adicionado
+     */
     public boolean isProdutoAdicionado() {
         return produtoAdicionado;
     }

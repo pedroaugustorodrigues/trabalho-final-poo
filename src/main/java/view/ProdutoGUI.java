@@ -11,17 +11,23 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.Optional;
 
+/**
+ * Tela de gerenciamento de produtos.
+ * Permite listar, adicionar, editar e remover produtos.
+ *
+ * @author Claudio
+ */
 public class ProdutoGUI extends JPanel {
     private ProdutoRepository repo = new ProdutoRepository();
     private DefaultTableModel tabelaModel;
     private JTable tabelaProdutos;
     
-    private final Color BACKGROUND_COLOR = new Color(240, 242, 245);
-    private final Color CARD_BG = Color.WHITE;
-    private final Color PRIMARY_COLOR = new Color(108, 99, 255);
-    private final Color ACCENT_COLOR = new Color(32, 201, 151);
-    private final Color DANGER_COLOR = new Color(230, 86, 86);
-    private final Color TEXT_COLOR = new Color(51, 51, 51);
+    private static final Color BACKGROUND_COLOR = new Color(240, 242, 245);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color PRIMARY_COLOR = new Color(108, 99, 255);
+    private static final Color ACCENT_COLOR = new Color(32, 201, 151);
+    private static final Color DANGER_COLOR = new Color(230, 86, 86);
+    private static final Color TEXT_COLOR = new Color(51, 51, 51);
     @SuppressWarnings("unused")
     public ProdutoGUI() {
         setLayout(new BorderLayout());
@@ -133,6 +139,9 @@ public class ProdutoGUI extends JPanel {
         carregarProdutosNaTabela();
     }
 
+    /**
+     * Cria um botão estilizado para ações.
+     */
     private JButton createStyledButton(String text, Color bgColor, String icon) {
         JButton button = new JButton(icon + " " + text);
         button.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -154,6 +163,9 @@ public class ProdutoGUI extends JPanel {
         return button;
     }
 
+    /**
+     * Carrega os produtos do repositório na tabela.
+     */
     private void carregarProdutosNaTabela() {
         tabelaModel.setRowCount(0);
         for (Produto p : repo.listar()) {
@@ -168,6 +180,9 @@ public class ProdutoGUI extends JPanel {
         }
     }
 
+    /**
+     * Abre o modal para adicionar um novo produto.
+     */
     private void adicionarProduto() {
         AdicionarProdutoModal modal = new AdicionarProdutoModal((Frame) SwingUtilities.getWindowAncestor(this));
         modal.setVisible(true);
@@ -177,6 +192,9 @@ public class ProdutoGUI extends JPanel {
         }
     }
 
+    /**
+     * Abre o modal para editar o produto selecionado.
+     */
     private void editarProduto() {
         int selectedRow = tabelaProdutos.getSelectedRow();
         if (selectedRow != -1) {
@@ -196,6 +214,9 @@ public class ProdutoGUI extends JPanel {
         }
     }
 
+    /**
+     * Remove o produto selecionado após confirmação.
+     */
     private void removerProduto() {
         int selectedRow = tabelaProdutos.getSelectedRow();
         if (selectedRow != -1) {

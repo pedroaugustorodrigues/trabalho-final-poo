@@ -8,19 +8,33 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
+/**
+ * Modal para edição dos dados de um cliente existente.
+ * Permite alterar nome, email e celular, mantendo o CPF fixo.
+ *
+ * @author Pedro
+ */
 public class EditarClienteModal extends JDialog {
     // Cores
-    private final Color BACKGROUND_COLOR = new Color(240, 242, 245);
-    private final Color CARD_BG = Color.WHITE;
-    private final Color ACCENT_COLOR = new Color(32, 201, 151);
-    private final Color DANGER_COLOR = new Color(230, 86, 86);
-    private final Color TEXT_COLOR = new Color(51, 51, 51);
+    private static final Color BACKGROUND_COLOR = new Color(240, 242, 245);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color ACCENT_COLOR = new Color(32, 201, 151);
+    private static final Color DANGER_COLOR = new Color(230, 86, 86);
+    private static final Color TEXT_COLOR = new Color(51, 51, 51);
 
-    private JTextField campoNome, campoCpf, campoEmail, campoCelular;
-    private ClienteRepository repo = new ClienteRepository();
-    private Cliente clienteOriginal;
+    private final JTextField campoNome;
+    private final JTextField campoCpf;
+    private final JTextField campoEmail;
+    private final JTextField campoCelular;
+    private final ClienteRepository repo = new ClienteRepository();
+    private final Cliente clienteOriginal;
     private boolean clienteEditado = false;
 
+    /**
+     * Cria o modal de edição de cliente.
+     * @param parent janela pai
+     * @param cliente cliente a ser editado
+     */
     @SuppressWarnings("unused")
     public EditarClienteModal(Frame parent, Cliente cliente) {
         super(parent, "Editar Cliente", true);
@@ -75,6 +89,9 @@ public class EditarClienteModal extends JDialog {
         setLocationRelativeTo(parent);
     }
 
+    /**
+     * Salva as alterações do cliente após validação dos campos.
+     */
     private void salvarAlteracoes() {
         if (!validarCampos()) return;
 
@@ -88,10 +105,17 @@ public class EditarClienteModal extends JDialog {
         dispose();
     }
 
+    /**
+     * Indica se o cliente foi editado com sucesso.
+     * @return true se editado
+     */
     public boolean isClienteEditado() {
         return clienteEditado;
     }
 
+    /**
+     * Cria um campo de texto estilizado com placeholder.
+     */
     private JTextField createStyledTextField(String text, String placeholder) {
         JTextField field = new JTextField(text);
         field.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -123,6 +147,9 @@ public class EditarClienteModal extends JDialog {
         return field;
     }
 
+    /**
+     * Cria um botão estilizado para ações principais.
+     */
     private JButton createStyledButton(String text, Color bgColor) {
         JButton button = new JButton(text);
         button.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -143,6 +170,9 @@ public class EditarClienteModal extends JDialog {
         return button;
     }
 
+    /**
+     * Valida os campos obrigatórios do formulário.
+     */
     private boolean validarCampos() {
         if (campoNome.getText().trim().isEmpty() || campoNome.getText().equals("Nome Completo")) {
             JOptionPane.showMessageDialog(this, "Nome é obrigatório!", "Erro", JOptionPane.ERROR_MESSAGE);

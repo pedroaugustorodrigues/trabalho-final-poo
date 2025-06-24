@@ -13,13 +13,19 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Modal para edição dos dados de um produto existente.
+ * Permite alterar descrição, categoria, marca, preço e quantidade.
+ *
+ * @author Claudio
+ */
 public class EditarProdutoModal extends JDialog {
-    private final Color BACKGROUND_COLOR = new Color(240, 242, 245);
-    private final Color CARD_BG = Color.WHITE;
-    private final Color PRIMARY_COLOR = new Color(108, 99, 255);
-    private final Color ACCENT_COLOR = new Color(32, 201, 151);
-    private final Color DANGER_COLOR = new Color(230, 86, 86);
-    private final Color TEXT_COLOR = new Color(51, 51, 51);
+    private static final Color BACKGROUND_COLOR = new Color(240, 242, 245);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color PRIMARY_COLOR = new Color(108, 99, 255);
+    private static final Color ACCENT_COLOR = new Color(32, 201, 151);
+    private static final Color DANGER_COLOR = new Color(230, 86, 86);
+    private static final Color TEXT_COLOR = new Color(51, 51, 51);
 
     private JTextField txtDescricao;
     private JComboBox<Categoria> cbCategoria;
@@ -31,13 +37,18 @@ public class EditarProdutoModal extends JDialog {
     private JButton btnSalvar;
     private JButton btnCancelar;
     
-    private CategoriaRepository categoriaRepository;
-    private MarcaRepository marcaRepository;
-    private ProdutoRepository produtoRepository;
-    private Produto produtoOriginal;
+    private final CategoriaRepository categoriaRepository;
+    private final MarcaRepository marcaRepository;
+    private final ProdutoRepository produtoRepository;
+    private final Produto produtoOriginal;
     
     private boolean produtoEditado = false;
 
+    /**
+     * Cria o modal de edição de produto.
+     * @param parent janela pai
+     * @param produto produto a ser editado
+     */
     public EditarProdutoModal(Frame parent, Produto produto) {
         super(parent, "Editar Produto", true);
         this.produtoOriginal = produto;
@@ -57,6 +68,9 @@ public class EditarProdutoModal extends JDialog {
         setResizable(false);
     }
 
+    /**
+     * Inicializa os componentes do formulário.
+     */
     private void initComponents() {
         txtDescricao = createStyledTextField("", "Descrição do Produto");
 
@@ -102,6 +116,9 @@ public class EditarProdutoModal extends JDialog {
         btnCancelar.setFocusPainted(false);
     }
 
+    /**
+     * Organiza o layout dos componentes na tela.
+     */
     private void setupLayout() {
         setLayout(new BorderLayout());
         getContentPane().setBackground(CARD_BG);
@@ -190,6 +207,9 @@ public class EditarProdutoModal extends JDialog {
         add(contentPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Cria um campo de texto estilizado com placeholder.
+     */
     private JTextField createStyledTextField(String text, String placeholder) {
         JTextField field = new JTextField(text);
         field.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -221,6 +241,9 @@ public class EditarProdutoModal extends JDialog {
         return field;
     }
 
+    /**
+     * Aplica estilo ao ComboBox.
+     */
     private void stylizeComboBox(JComboBox<?> comboBox) {
         comboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
         comboBox.setBorder(BorderFactory.createCompoundBorder(
@@ -229,6 +252,9 @@ public class EditarProdutoModal extends JDialog {
         ));
     }
 
+    /**
+     * Cria um JLabel estilizado para campos do formulário.
+     */
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -236,7 +262,9 @@ public class EditarProdutoModal extends JDialog {
         return label;
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Inicializa listeners dos botões e campos.
+     */
     private void setupListeners() {
         btnAdicionarCategoria.addActionListener(e -> adicionarCategoria());
         btnAdicionarMarca.addActionListener(e -> adicionarMarca());
@@ -280,6 +308,9 @@ public class EditarProdutoModal extends JDialog {
         });
     }
 
+    /**
+     * Carrega categorias e marcas nos ComboBoxes.
+     */
     private void carregarDados() {
         List<Categoria> categorias = categoriaRepository.listar();
         cbCategoria.removeAllItems();
@@ -294,6 +325,9 @@ public class EditarProdutoModal extends JDialog {
         }
     }
 
+    /**
+     * Preenche os campos do formulário com os dados do produto original.
+     */
     private void preencherDados() {
         if (produtoOriginal != null) {
             txtDescricao.setText(produtoOriginal.getDescricao());
@@ -305,6 +339,9 @@ public class EditarProdutoModal extends JDialog {
         }
     }
 
+    /**
+     * Adiciona uma nova categoria ao repositório e ComboBox.
+     */
     private void adicionarCategoria() {
         String nomeCategoria = JOptionPane.showInputDialog(this, 
             "Digite o nome da nova categoria:", 
@@ -319,6 +356,9 @@ public class EditarProdutoModal extends JDialog {
         }
     }
 
+    /**
+     * Adiciona uma nova marca ao repositório e ComboBox.
+     */
     private void adicionarMarca() {
         String nomeMarca = JOptionPane.showInputDialog(this, 
             "Digite o nome da nova marca:", 
@@ -333,6 +373,9 @@ public class EditarProdutoModal extends JDialog {
         }
     }
 
+    /**
+     * Salva as alterações do produto após validação dos campos.
+     */
     private void salvarProduto() {
         try {
             String descricao = txtDescricao.getText().trim();
@@ -394,6 +437,10 @@ public class EditarProdutoModal extends JDialog {
         }
     }
 
+    /**
+     * Indica se o produto foi editado com sucesso.
+     * @return true se editado
+     */
     public boolean isProdutoEditado() {
         return produtoEditado;
     }

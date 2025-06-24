@@ -3,8 +3,13 @@ package main.java.view;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Wizard para finalizar compra (passo a passo de pagamento e entrega).
+ * Exibe etapas para seleção de pagamento, endereço e confirmação.
+ *
+ * @author Rafael
+ */
 public class FinalizarCompraWizard extends JDialog {
-    @SuppressWarnings("unused")
     private int etapa = 1;
     private String formaPagamento = "";
     private String endereco = "";
@@ -22,6 +27,12 @@ public class FinalizarCompraWizard extends JDialog {
     private JRadioButton rbBoleto;
     private JTextField txtEndereco;
 
+    /**
+     * Construtor do wizard de finalização de compra.
+     * @param parent janela pai
+     * @param total valor total da compra
+     * @param onConfirmar ação a ser executada ao confirmar
+     */
     public FinalizarCompraWizard(JFrame parent, double total, Runnable onConfirmar) {
         super(parent, "Finalizar Compra", true);
         this.total = total;
@@ -41,7 +52,9 @@ public class FinalizarCompraWizard extends JDialog {
         criarEtapa1();
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Etapa 1: Seleção da forma de pagamento.
+     */
     private void criarEtapa1() {
         mainPanel.removeAll();
         lblTitulo.setText("Selecione a forma de pagamento");
@@ -89,7 +102,9 @@ public class FinalizarCompraWizard extends JDialog {
         mainPanel.repaint();
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Etapa 2: Informar endereço de entrega.
+     */
     private void criarEtapa2() {
         mainPanel.removeAll();
         lblTitulo.setText("Informe o endereço de entrega");
@@ -127,7 +142,9 @@ public class FinalizarCompraWizard extends JDialog {
         mainPanel.repaint();
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Etapa 3: Confirmação do pedido.
+     */
     private void criarEtapa3() {
         mainPanel.removeAll();
         lblTitulo.setText("Confirmação do Pedido");

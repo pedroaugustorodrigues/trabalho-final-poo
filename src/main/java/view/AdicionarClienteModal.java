@@ -8,18 +8,31 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
+/**
+ * Modal para cadastro de um novo cliente.
+ * Exibe formulário para preenchimento dos dados obrigatórios e salva no repositório.
+ *
+ * @author Rafael
+ */
 public class AdicionarClienteModal extends JDialog {
     // Cores da identidade visual
-    private final Color BACKGROUND_COLOR = new Color(240, 242, 245);
-    private final Color CARD_BG = Color.WHITE;
-    private final Color ACCENT_COLOR = new Color(32, 201, 151);
-    private final Color DANGER_COLOR = new Color(230, 86, 86);
-    private final Color TEXT_COLOR = new Color(51, 51, 51);
+    private static final Color BACKGROUND_COLOR = new Color(240, 242, 245);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color ACCENT_COLOR = new Color(32, 201, 151);
+    private static final Color DANGER_COLOR = new Color(230, 86, 86);
+    private static final Color TEXT_COLOR = new Color(51, 51, 51);
 
-    private JTextField campoNome, campoCpf, campoEmail, campoCelular;
-    private ClienteRepository repo = new ClienteRepository();
+    private final JTextField campoNome;
+    private final JTextField campoCpf;
+    private final JTextField campoEmail;
+    private final JTextField campoCelular;
+    private final ClienteRepository repo = new ClienteRepository();
     private boolean clienteAdicionado = false;
 
+    /**
+     * Cria o modal de cadastro de cliente.
+     * @param parent janela pai
+     */
     @SuppressWarnings("unused")
     public AdicionarClienteModal(Frame parent) {
         super(parent, "Novo Cliente", true);
@@ -75,6 +88,9 @@ public class AdicionarClienteModal extends JDialog {
         setLocationRelativeTo(parent);
     }
 
+    /**
+     * Salva o cliente no repositório após validação dos campos.
+     */
     private void salvarCliente() {
         if (!validarCampos()) {
             return;
@@ -92,10 +108,17 @@ public class AdicionarClienteModal extends JDialog {
         dispose();
     }
 
+    /**
+     * Indica se um cliente foi adicionado com sucesso.
+     * @return true se adicionado
+     */
     public boolean isClienteAdicionado() {
         return clienteAdicionado;
     }
     
+    /**
+     * Cria um campo de texto estilizado com placeholder.
+     */
     private JTextField createStyledTextField(String text, String placeholder) {
         JTextField field = new JTextField(text);
         field.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -127,6 +150,9 @@ public class AdicionarClienteModal extends JDialog {
         return field;
     }
 
+    /**
+     * Cria um botão estilizado para ações principais.
+     */
     private JButton createStyledButton(String text, Color bgColor) {
         JButton button = new JButton(text);
         button.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -147,6 +173,9 @@ public class AdicionarClienteModal extends JDialog {
         return button;
     }
 
+    /**
+     * Valida os campos obrigatórios do formulário.
+     */
     private boolean validarCampos() {
         if (campoNome.getText().trim().isEmpty() || campoNome.getText().equals("Nome Completo")) {
             JOptionPane.showMessageDialog(this, "Nome é obrigatório!", "Erro", JOptionPane.ERROR_MESSAGE);

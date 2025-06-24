@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representa o carrinho de compras de um cliente.
+ */
 public class Carrinho implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -36,7 +39,11 @@ public class Carrinho implements Serializable {
     }
 
     public double getTotal() {
-        return itens.stream().mapToDouble(CarrinhoItem::getSubtotal).sum();
+        double soma = 0;
+        for (CarrinhoItem item : itens) {
+            soma += item.getSubtotal();
+        }
+        return soma;
     }
 
     public boolean isVazio() {

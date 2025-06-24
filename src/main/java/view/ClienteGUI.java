@@ -10,21 +10,30 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+/**
+ * Tela de gerenciamento de clientes.
+ * Permite listar, adicionar, editar e remover clientes.
+ *
+ * @author Rafael
+ */
 public class ClienteGUI extends JPanel {
     private ClienteRepository repo = new ClienteRepository();
     private DefaultTableModel tabelaModel;
     private JTable tabelaClientes;
     
     // Cores da identidade visual
-    private final Color BACKGROUND_COLOR = new Color(240, 242, 245);
-    private final Color CARD_BG = Color.WHITE;
-    private final Color PRIMARY_COLOR = new Color(108, 99, 255);
-    private final Color ACCENT_COLOR = new Color(32, 201, 151);
-    private final Color DANGER_COLOR = new Color(230, 86, 86);
-    private final Color TEXT_COLOR = new Color(51, 51, 51);
+    private static final Color BACKGROUND_COLOR = new Color(240, 242, 245);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color PRIMARY_COLOR = new Color(108, 99, 255);
+    private static final Color ACCENT_COLOR = new Color(32, 201, 151);
+    private static final Color DANGER_COLOR = new Color(230, 86, 86);
+    private static final Color TEXT_COLOR = new Color(51, 51, 51);
     @SuppressWarnings("unused")
-    private final Color SECONDARY_TEXT = new Color(120, 120, 120);
+    private static final Color SECONDARY_TEXT = new Color(120, 120, 120);
 
+    /**
+     * Construtor da tela de clientes.
+     */
     @SuppressWarnings("unused")
     public ClienteGUI() {
         setLayout(new BorderLayout());
@@ -142,6 +151,9 @@ public class ClienteGUI extends JPanel {
         carregarClientes();
     }
 
+    /**
+     * Cria um botão estilizado para ações.
+     */
     private JButton createStyledButton(String text, Color bgColor, String icon) {
         JButton button = new JButton(icon + " " + text);
         button.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -163,6 +175,9 @@ public class ClienteGUI extends JPanel {
         return button;
     }
 
+    /**
+     * Carrega os clientes do repositório na tabela.
+     */
     private void carregarClientes() {
         tabelaModel.setRowCount(0); // Limpa a tabela
         for (Cliente c : repo.listar()) {
@@ -175,6 +190,9 @@ public class ClienteGUI extends JPanel {
         }
     }
 
+    /**
+     * Abre o modal para adicionar um novo cliente.
+     */
     private void adicionarCliente() {
         AdicionarClienteModal modal = new AdicionarClienteModal((Frame) SwingUtilities.getWindowAncestor(this));
         modal.setVisible(true);
@@ -183,6 +201,9 @@ public class ClienteGUI extends JPanel {
         }
     }
 
+    /**
+     * Abre o modal para editar o cliente selecionado.
+     */
     private void editarCliente() {
         int selectedRow = tabelaClientes.getSelectedRow();
         if (selectedRow != -1) {
@@ -201,6 +222,9 @@ public class ClienteGUI extends JPanel {
         }
     }
 
+    /**
+     * Remove o cliente selecionado após confirmação.
+     */
     private void removerCliente() {
         int selectedRow = tabelaClientes.getSelectedRow();
         if (selectedRow != -1) {

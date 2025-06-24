@@ -2,6 +2,9 @@ package main.java.model;
 
 import java.io.Serializable;
 
+/**
+ * Representa uma categoria de produto.
+ */
 public class Categoria implements Serializable {
     private static final long serialVersionUID = 1L;
     private static int proximoId = 1;
@@ -9,6 +12,9 @@ public class Categoria implements Serializable {
     private int id;
     private String nome;
     
+    /**
+     * Cria uma nova categoria.
+     */
     public Categoria(String nome) {
         this.id = proximoId++;
         this.nome = nome;

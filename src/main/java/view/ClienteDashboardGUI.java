@@ -16,6 +16,12 @@ import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.util.List;
 
+/**
+ * Tela de dashboard do Cliente.
+ * Permite ao cliente visualizar produtos, carrinho, histórico e configurações.
+ *
+ * @author Rafael
+ */
 public class ClienteDashboardGUI extends JFrame {
     private JPanel produtosPanel;
     private JPanel carrinhoPanel;
@@ -25,24 +31,33 @@ public class ClienteDashboardGUI extends JFrame {
     private VendaRepository vendaRepository;
     
     // Cores do GestorDashboardGUI
-    private final Color SIDEBAR_BG = new Color(23, 34, 58);
-    private final Color CONTENT_BG = new Color(240, 242, 245);
-    @SuppressWarnings("unused")
-    private final Color CARD_BG = Color.WHITE;
-    private final Color ROXO_TOPO = new Color(108, 99, 255);
-    private final Color ROXO_SELECIONADO = new Color(120, 100, 255);
+    private static final Color SIDEBAR_BG = new Color(23, 34, 58);
+    private static final Color CONTENT_BG = new Color(240, 242, 245);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color ROXO_TOPO = new Color(108, 99, 255);
+    private static final Color ROXO_SELECIONADO = new Color(120, 100, 255);
     
     private JPanel contentPanel;
     private CardLayout cardLayout;
     private boolean isMaximized = false;
     private Rectangle windowBoundsBeforeMaximize;
-    private java.util.List<JButton> sidebarButtons = new java.util.ArrayList<>();
+    private final java.util.List<JButton> sidebarButtons = new java.util.ArrayList<>();
     private String selectedSidebar = "INICIO";
 
+    /**
+     * Construtor principal do dashboard do cliente.
+     * @param usuarioAtual usuário logado (deve ser Cliente)
+     */
     public ClienteDashboardGUI(Usuario usuarioAtual) {
         this(usuarioAtual, new ProdutoRepository(), new VendaRepository());
     }
 
+    /**
+     * Construtor do dashboard do cliente com repositórios customizados.
+     * @param usuarioAtual usuário logado (deve ser Cliente)
+     * @param produtoRepository repositório de produtos
+     * @param vendaRepository repositório de vendas
+     */
     public ClienteDashboardGUI(Usuario usuarioAtual, ProdutoRepository produtoRepository, VendaRepository vendaRepository) {
         // Verificar se o usuário é um Cliente
         if (!(usuarioAtual instanceof Cliente)) {
@@ -84,7 +99,9 @@ public class ClienteDashboardGUI extends JFrame {
         contentPane.add(contentPanel, BorderLayout.CENTER);
     }
 
-    // Construtor sem parâmetros para manter compatibilidade (mas com acesso negado)
+    /**
+     * Construtor sem parâmetros (acesso negado).
+     */
     public ClienteDashboardGUI() {
         JOptionPane.showMessageDialog(null, 
             "Acesso negado! É necessário fazer login como cliente.", 
@@ -93,6 +110,9 @@ public class ClienteDashboardGUI extends JFrame {
         throw new SecurityException("Acesso negado: login necessário");
     }
 
+    /**
+     * Cria a barra lateral de navegação.
+     */
     private JPanel createSidebar() {
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
@@ -121,7 +141,9 @@ public class ClienteDashboardGUI extends JFrame {
         return sidebar;
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Cria um botão da barra lateral.
+     */
     private JButton createSidebarButton(String text, String cardName, Color selectedColor, Color bgColor) {
         JButton button = new JButton(text);
 
@@ -164,6 +186,9 @@ public class ClienteDashboardGUI extends JFrame {
         return button;
     }
 
+    /**
+     * Cria o painel inicial (home) do dashboard.
+     */
     private JPanel createHomePanel() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -175,16 +200,6 @@ public class ClienteDashboardGUI extends JFrame {
         welcomeLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Exibir CPF do cliente
-        String cpf = "";
-        if (usuarioAtual instanceof Cliente) {
-            cpf = ((Cliente) usuarioAtual).getCpf();
-        }
-        JLabel cpfLabel = new JLabel("CPF: " + cpf);
-        cpfLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        cpfLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        cpfLabel.setForeground(new Color(100, 116, 139));
-
         JLabel subtitleLabel = new JLabel("Explore nossos produtos e faça suas compras");
         subtitleLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
         subtitleLabel.setForeground(Color.GRAY);
@@ -195,8 +210,6 @@ public class ClienteDashboardGUI extends JFrame {
 
         mainPanel.add(welcomeLabel);
         mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(cpfLabel);
-        mainPanel.add(Box.createVerticalStrut(10));
         mainPanel.add(subtitleLabel);
         mainPanel.add(Box.createVerticalStrut(80));
         mainPanel.add(actionsPanel);
@@ -204,6 +217,9 @@ public class ClienteDashboardGUI extends JFrame {
         return mainPanel;
     }
 
+    /**
+     * Cria o painel de ações rápidas.
+     */
     private JPanel createActionsPanel() {
         JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 24, 0));
         actionsPanel.setBackground(CONTENT_BG);
@@ -216,6 +232,9 @@ public class ClienteDashboardGUI extends JFrame {
         return actionsPanel;
     }
 
+    /**
+     * Cria um botão de ação rápida.
+     */
     private JPanel createActionButton(String text, String iconPath, Runnable action) {
         JPanel panel = new JPanel(new BorderLayout(0,10)) {
             @Override
@@ -994,16 +1013,9 @@ public class ClienteDashboardGUI extends JFrame {
     }
 
     private void showPanel(String panelName) {
-        if (panelName.equals("HISTORICO")) {
-            contentPanel.remove(contentPanel.getComponent(3));
-            contentPanel.add(createHistoricoPanel(), "HISTORICO");
-        }
-        selectedSidebar = panelName;
-        for (JButton btn : sidebarButtons) {
-            String btnCard = (String) btn.getClientProperty("cardName");
-            btn.setBackground(selectedSidebar.equals(btnCard) ? ROXO_SELECIONADO : SIDEBAR_BG);
-        }
         cardLayout.show(contentPanel, panelName);
+        contentPanel.revalidate();
+        contentPanel.repaint();
     }
 
     @SuppressWarnings("unused")

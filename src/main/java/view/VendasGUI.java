@@ -12,18 +12,24 @@ import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Tela de gerenciamento de vendas.
+ * Permite listar, adicionar e remover vendas.
+ *
+ * @author Pedro
+ */
 public class VendasGUI extends JPanel {
 
     private VendaRepository vendaRepository = new VendaRepository();
     private DefaultTableModel tableModel;
     private JTable table;
     
-    private final Color BACKGROUND_COLOR = new Color(240, 242, 245);
-    private final Color CARD_BG = Color.WHITE;
-    private final Color PRIMARY_COLOR = new Color(108, 99, 255);
-    private final Color ACCENT_COLOR = new Color(32, 201, 151);
-    private final Color DANGER_COLOR = new Color(230, 86, 86);
-    private final Color TEXT_COLOR = new Color(51, 51, 51);
+    private static final Color BACKGROUND_COLOR = new Color(240, 242, 245);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color PRIMARY_COLOR = new Color(108, 99, 255);
+    private static final Color ACCENT_COLOR = new Color(32, 201, 151);
+    private static final Color DANGER_COLOR = new Color(230, 86, 86);
+    private static final Color TEXT_COLOR = new Color(51, 51, 51);
     @SuppressWarnings("unused")
     public VendasGUI() {
         setLayout(new BorderLayout());
@@ -133,6 +139,9 @@ public class VendasGUI extends JPanel {
         loadVendas();
     }
 
+    /**
+     * Cria um botão estilizado para ações.
+     */
     private JButton createStyledButton(String text, Color bgColor, String icon) {
         JButton button = new JButton(icon + " " + text);
         button.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -154,6 +163,9 @@ public class VendasGUI extends JPanel {
         return button;
     }
 
+    /**
+     * Carrega as vendas do repositório na tabela.
+     */
     private void loadVendas() {
         tableModel.setRowCount(0);
         List<Venda> vendas = vendaRepository.listar();
@@ -177,6 +189,9 @@ public class VendasGUI extends JPanel {
         }
     }
 
+    /**
+     * Abre o modal para adicionar uma nova venda.
+     */
     private void addVendaAction() {
         Window owner = SwingUtilities.getWindowAncestor(this);
         NovaVendaGUI novaVendaGUI = new NovaVendaGUI((Frame)owner);
@@ -184,6 +199,9 @@ public class VendasGUI extends JPanel {
         loadVendas();
     }
 
+    /**
+     * Remove a venda selecionada após confirmação.
+     */
     private void deleteVendaAction() {
         int selectedRow = table.getSelectedRow();
         if (selectedRow >= 0) {

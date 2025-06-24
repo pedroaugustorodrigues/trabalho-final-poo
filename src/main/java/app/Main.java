@@ -8,7 +8,17 @@ import main.java.model.Cliente;
 
 import javax.swing.*;
 
+/**
+ * Classe principal da aplicação.
+ * Inicializa repositórios, cria usuários padrão e exibe a tela de login.
+ *
+ * @author Pedro
+ */
 public class Main {
+    /**
+     * Método principal. Inicializa o sistema e exibe a tela de login.
+     * @param args argumentos de linha de comando
+     */
     public static void main(String[] args) {
         UsuarioRepository usuarioRepository = new UsuarioRepository();
         AutenticacaoService autenticacaoService = new AutenticacaoService(usuarioRepository);
@@ -26,6 +36,7 @@ public class Main {
             System.out.println("Usuários padrão já existem ou erro ao criar: " + e.getMessage());
         }
 
+        // Inicia a interface gráfica
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

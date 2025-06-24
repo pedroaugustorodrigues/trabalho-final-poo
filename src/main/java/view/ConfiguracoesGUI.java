@@ -9,19 +9,29 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
+/**
+ * Tela de configurações do usuário.
+ * Permite visualizar informações do usuário, alterar senha e sair do sistema.
+ *
+ * @author Pedro
+ */
 public class ConfiguracoesGUI extends JPanel {
     private Usuario usuario;
     private UsuarioRepository usuarioRepository;
     private AutenticacaoService autenticacaoService;
     
-    private final Color BACKGROUND_COLOR = new Color(240, 242, 245);
-    private final Color CARD_BG = Color.WHITE;
-    private final Color PRIMARY_COLOR = new Color(108, 99, 255);
-    private final Color ACCENT_COLOR = new Color(32, 201, 151);
-    private final Color DANGER_COLOR = new Color(230, 86, 86);
-    private final Color TEXT_COLOR = new Color(51, 51, 51);
-    private final Color SECONDARY_TEXT = new Color(120, 120, 120);
+    private static final Color BACKGROUND_COLOR = new Color(240, 242, 245);
+    private static final Color CARD_BG = Color.WHITE;
+    private static final Color PRIMARY_COLOR = new Color(108, 99, 255);
+    private static final Color ACCENT_COLOR = new Color(32, 201, 151);
+    private static final Color DANGER_COLOR = new Color(230, 86, 86);
+    private static final Color TEXT_COLOR = new Color(51, 51, 51);
+    private static final Color SECONDARY_TEXT = new Color(120, 120, 120);
 
+    /**
+     * Construtor da tela de configurações.
+     * @param usuario usuário logado
+     */
     public ConfiguracoesGUI(Usuario usuario) {
         this.usuario = usuario;
         this.usuarioRepository = new UsuarioRepository();
@@ -59,6 +69,9 @@ public class ConfiguracoesGUI extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Cria a seção de informações do usuário.
+     */
     private JPanel createUserInfoSection() {
         JPanel section = new JPanel();
         section.setLayout(new BorderLayout());
@@ -97,7 +110,9 @@ public class ConfiguracoesGUI extends JPanel {
         return section;
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Cria a seção de opções do sistema (alterar senha, sair).
+     */
     private JPanel createSystemOptionsSection() {
         JPanel section = new JPanel();
         section.setLayout(new BorderLayout());
@@ -128,6 +143,9 @@ public class ConfiguracoesGUI extends JPanel {
         return section;
     }
 
+    /**
+     * Cria um JLabel para o nome do campo.
+     */
     private JLabel createInfoLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -135,6 +153,9 @@ public class ConfiguracoesGUI extends JPanel {
         return label;
     }
 
+    /**
+     * Cria um JLabel para o valor do campo.
+     */
     private JLabel createInfoValue(String value) {
         JLabel label = new JLabel(value);
         label.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -142,6 +163,9 @@ public class ConfiguracoesGUI extends JPanel {
         return label;
     }
 
+    /**
+     * Cria um botão estilizado para ações.
+     */
     private JButton createStyledButton(String text, Color bgColor, String icon) {
         JButton button = new JButton(icon + " " + text);
         button.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -163,7 +187,9 @@ public class ConfiguracoesGUI extends JPanel {
         return button;
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Abre o diálogo para alterar a senha do usuário.
+     */
     private void alterarSenha() {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Alterar Senha", true);
         dialog.setLayout(new BorderLayout());
@@ -248,6 +274,9 @@ public class ConfiguracoesGUI extends JPanel {
         dialog.setVisible(true);
     }
 
+    /**
+     * Cria um campo de senha estilizado.
+     */
     private JPasswordField createStyledPasswordField(String placeholder) {
         JPasswordField field = new JPasswordField();
         field.setFont(new Font("SansSerif", Font.PLAIN, 14));
@@ -283,6 +312,9 @@ public class ConfiguracoesGUI extends JPanel {
         return field;
     }
 
+    /**
+     * Sai do sistema (fecha a aplicação).
+     */
     private void sairDoSistema() {
         int confirmacao = JOptionPane.showConfirmDialog(this, 
             "Tem certeza que deseja sair do sistema?", 

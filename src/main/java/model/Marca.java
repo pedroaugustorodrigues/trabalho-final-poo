@@ -2,6 +2,9 @@ package main.java.model;
 
 import java.io.Serializable;
 
+/**
+ * Representa uma marca de produto.
+ */
 public class Marca implements Serializable {
     private static final long serialVersionUID = 1L;
     private static int proximoId = 1;
@@ -9,17 +12,12 @@ public class Marca implements Serializable {
     private int id;
     private String nome;
     
+    /**
+     * Cria uma nova marca.
+     */
     public Marca(String nome) {
         this.id = proximoId++;
         this.nome = nome;
-    }
-    
-    public Marca(int id, String nome) {
-        this.id = id;
-        this.nome = nome;
-        if (id >= proximoId) {
-            proximoId = id + 1;
-        }
     }
     
     public int getId() {

@@ -12,9 +12,15 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Tela de dashboard do Gestor (Backoffice).
+ * Permite acesso a vendas, produtos, clientes e configurações.
+ *
+ * @author Pedro
+ */
 public class GestorDashboardGUI extends JFrame {
 
-    private final Color CONTENT_BG = new Color(240, 242, 245);
+    private static final Color CONTENT_BG = new Color(240, 242, 245);
     private final VendaRepository vendaRepository;
     private final Usuario usuarioAtual;
     
@@ -24,11 +30,15 @@ public class GestorDashboardGUI extends JFrame {
     private boolean isMaximized = false;
     private Rectangle windowBoundsBeforeMaximize;
 
-    private java.util.List<JButton> sidebarButtons = new java.util.ArrayList<>();
+    private final java.util.List<JButton> sidebarButtons = new java.util.ArrayList<>();
     private String selectedSidebar = "INICIO";
 
     private JPanel summaryPanel;
 
+    /**
+     * Construtor do dashboard do gestor.
+     * @param usuarioAtual usuário logado (deve ser Gestor)
+     */
     public GestorDashboardGUI(Usuario usuarioAtual) {
         // Verificar se o usuário é um Gestor
         if (!(usuarioAtual instanceof Gestor)) {
@@ -70,6 +80,9 @@ public class GestorDashboardGUI extends JFrame {
         loadDashboardData();
     }
 
+    /**
+     * Cria a barra lateral de navegação.
+     */
     private JPanel createSidebar() {
         Color azulEscuro = new Color(10, 10, 60);
         Color roxoTopo = new Color(108, 99, 255);
@@ -102,7 +115,9 @@ public class GestorDashboardGUI extends JFrame {
         return sidebar;
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Cria um botão da barra lateral.
+     */
     private JButton createSidebarButton(String text, String cardName, Color selectedColor, Color bgColor) {
         JButton button = new JButton(text);
 
@@ -150,26 +165,19 @@ public class GestorDashboardGUI extends JFrame {
         throw new UnsupportedOperationException("Unimplemented method 'updateSidebarSelection'");
     }
 
+    /**
+     * Cria o painel inicial (home) do dashboard.
+     */
     private JPanel createHomePanel() {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBackground(new Color(240, 242, 245));
+        mainPanel.setBackground(CONTENT_BG);
 
         mainPanel.add(Box.createVerticalStrut(80));
 
         JLabel welcomeLabel = new JLabel("Olá, bem-vindo!");
         welcomeLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Exibir CPF do gestor
-        String cpf = "";
-        if (usuarioAtual instanceof Gestor) {
-            cpf = ((Gestor) usuarioAtual).getCpf();
-        }
-        JLabel cpfLabel = new JLabel("CPF: " + cpf);
-        cpfLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        cpfLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        cpfLabel.setForeground(new Color(100, 116, 139));
 
         summaryPanel = createSummaryPanel();
         summaryPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -179,7 +187,6 @@ public class GestorDashboardGUI extends JFrame {
 
         mainPanel.add(welcomeLabel);
         mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(cpfLabel);
         mainPanel.add(Box.createVerticalStrut(70));
         mainPanel.add(summaryPanel);
         mainPanel.add(Box.createVerticalStrut(30));
@@ -188,9 +195,12 @@ public class GestorDashboardGUI extends JFrame {
         return mainPanel;
     }
 
+    /**
+     * Cria o painel de resumo com cards de indicadores.
+     */
     private JPanel createSummaryPanel() {
         JPanel summaryPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 24, 0));
-        summaryPanel.setBackground(new Color(240, 242, 245));
+        summaryPanel.setBackground(CONTENT_BG);
         summaryPanel.setBorder(new EmptyBorder(0, 24, 0, 24));
 
         summaryPanel.add(createSummaryCard("Faturamento", "R$ 0,00", new Color(111, 66, 193), "/images/icon_money.png"));
@@ -201,9 +211,12 @@ public class GestorDashboardGUI extends JFrame {
         return summaryPanel;
     }
 
+    /**
+     * Cria o painel de ações rápidas.
+     */
     private JPanel createActionsPanel() {
         JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 24, 0));
-        actionsPanel.setBackground(new Color(240, 242, 245));
+        actionsPanel.setBackground(CONTENT_BG);
         actionsPanel.setBorder(new EmptyBorder(0, 24, 0, 24));
 
         actionsPanel.add(createActionButton("Nova Venda", "/images/action_new_sale.png", () -> new NovaVendaGUI(this).setVisible(true)));
@@ -214,6 +227,9 @@ public class GestorDashboardGUI extends JFrame {
         return actionsPanel;
     }
     
+    /**
+     * Cria um card de resumo para indicadores.
+     */
     private JPanel createSummaryCard(String title, String value, Color accentColor, String iconPath) {
         JPanel card = new JPanel(new BorderLayout(10, 0)) {
             @Override
@@ -272,6 +288,9 @@ public class GestorDashboardGUI extends JFrame {
         return card;
     }
 
+    /**
+     * Cria um botão de ação rápida.
+     */
     private JPanel createActionButton(String text, String iconPath, Runnable action) {
         JPanel panel = new JPanel(new BorderLayout(0,10)) {
             @Override
@@ -315,6 +334,9 @@ public class GestorDashboardGUI extends JFrame {
         return panel;
     }
 
+    /**
+     * Exibe o painel correspondente ao cardName.
+     */
     private void showPanel(String panelName) {
         cardLayout.show(contentPanel, panelName);
     }
@@ -330,6 +352,9 @@ public class GestorDashboardGUI extends JFrame {
         return panel;
     }
 
+    /**
+     * Carrega e atualiza os dados do dashboard (indicadores).
+     */
     private void loadDashboardData() {
         List<Venda> vendas = vendaRepository.listar();
         
@@ -353,6 +378,9 @@ public class GestorDashboardGUI extends JFrame {
         updateSummaryCard(summaryPanel, 3, currencyFormat.format(ticketMedio));
     }
 
+    /**
+     * Atualiza o valor de um card de resumo.
+     */
     private void updateSummaryCard(JPanel summaryPanel, int cardIndex, String value) {
         if (summaryPanel.getComponentCount() > cardIndex) {
             JPanel card = (JPanel) summaryPanel.getComponent(cardIndex);
@@ -373,7 +401,9 @@ public class GestorDashboardGUI extends JFrame {
         }
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Cria a barra de título customizada da janela.
+     */
     private JPanel createCustomTitleBar() {
         JPanel titleBar = new JPanel();
         titleBar.setLayout(new BorderLayout());

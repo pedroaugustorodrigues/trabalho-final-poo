@@ -2,6 +2,9 @@ package main.java.model;
 
 import java.io.Serializable;
 
+/**
+ * Representa um item de uma venda.
+ */
 public class ItemVenda implements Serializable {
     private static final long serialVersionUID = 1L;
 

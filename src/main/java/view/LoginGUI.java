@@ -11,17 +11,23 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
+/**
+ * Tela de Login e Registro do sistema.
+ * Permite alternar entre login e cadastro de usuário (Cliente ou Gestor).
+ *
+ * @author Pedro
+ */
 public class LoginGUI extends JFrame {
-    private AutenticacaoService autenticacaoService;
+    private final AutenticacaoService autenticacaoService;
     private JTextField emailField;
     private JPasswordField senhaField;
     private Point initialClick;
     private JPanel mainPanel;
     private JPanel leftPanel;
     private JPanel rightPanel;
-    @SuppressWarnings("unused")
     private boolean mostrandoLogin = true;
 
+    // Cores padrão da interface
     private static final Color COR_PAINEL_ESQUERDO = new Color(108, 99, 255);
     private static final Color COR_BOTAO_LOGIN = new Color(108, 99, 255);
     private static final Color COR_BOTAO_REGISTRO = new Color(255, 255, 255);
@@ -29,6 +35,10 @@ public class LoginGUI extends JFrame {
     private static final Color COR_TEXTO_BOTAO_REGISTRO = new Color(108, 99, 255);
     private static final Color COR_FUNDO_DIREITO = Color.WHITE;
 
+    /**
+     * Construtor da tela de Login.
+     * @param autenticacaoService serviço de autenticação a ser utilizado
+     */
     public LoginGUI(AutenticacaoService autenticacaoService) {
         this.autenticacaoService = autenticacaoService;
         setTitle("Login");
@@ -67,6 +77,9 @@ public class LoginGUI extends JFrame {
         });
     }
 
+    /**
+     * Cria o painel esquerdo com mensagem de boas-vindas e ilustração.
+     */
     private JPanel createLeftPanel() {
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setBackground(COR_PAINEL_ESQUERDO);
@@ -91,7 +104,9 @@ public class LoginGUI extends JFrame {
         return leftPanel;
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Cria o painel direito (login).
+     */
     private JPanel createRightPanel() {
         JPanel rightPanel = new JPanel();
         rightPanel.setBackground(COR_FUNDO_DIREITO);
@@ -146,6 +161,9 @@ public class LoginGUI extends JFrame {
         return rightPanel;
     }
     
+    /**
+     * Cria um painel de input com ícone à esquerda.
+     */
     private JPanel createInputPanelWithIcon(String iconPath, JTextField textField) {
         JPanel panel = new JPanel(new BorderLayout(10, 0));
         panel.setOpaque(false);
@@ -165,6 +183,9 @@ public class LoginGUI extends JFrame {
         return panel;
     }
 
+    /**
+     * Cria um botão arredondado customizado.
+     */
     private JButton createRoundedButton(String text, Color backgroundColor, Color textColor) {
         JButton button = new JButton(text) {
             @Override
@@ -187,7 +208,9 @@ public class LoginGUI extends JFrame {
         return button;
     }
     
-    @SuppressWarnings("unused")
+    /**
+     * Cria o botão de sair (fechar janela).
+     */
     private JButton createExitButton() {
         JButton button = new JButton();
         try {
@@ -204,6 +227,9 @@ public class LoginGUI extends JFrame {
         return button;
     }
 
+    /**
+     * Alterna para o painel de registro.
+     */
     private void alternarParaRegistro() {
         mainPanel.remove(rightPanel);
         rightPanel = createRegisterPanel();
@@ -213,6 +239,9 @@ public class LoginGUI extends JFrame {
         mostrandoLogin = false;
     }
 
+    /**
+     * Alterna para o painel de login.
+     */
     private void alternarParaLogin() {
         mainPanel.remove(rightPanel);
         rightPanel = createRightPanel();
@@ -222,7 +251,9 @@ public class LoginGUI extends JFrame {
         mostrandoLogin = true;
     }
 
-    @SuppressWarnings("unused")
+    /**
+     * Cria o painel de registro de usuário.
+     */
     private JPanel createRegisterPanel() {
         JPanel registerPanel = new JPanel();
         registerPanel.setBackground(COR_FUNDO_DIREITO);
@@ -324,7 +355,9 @@ public class LoginGUI extends JFrame {
         return registerPanel;
     }
 
-    // Adiciona placeholder a JTextField ou JPasswordField
+    /**
+     * Adiciona placeholder a JTextField ou JPasswordField.
+     */
     private void setPlaceholder(JTextField field, String placeholder) {
         field.setForeground(Color.GRAY);
         field.setText(placeholder);
@@ -353,6 +386,9 @@ public class LoginGUI extends JFrame {
         }
     }
 
+    /**
+     * Realiza o login do usuário.
+     */
     private void performLogin() {
         String email = emailField.getText();
         String senha = new String(senhaField.getPassword());
