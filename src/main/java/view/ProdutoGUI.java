@@ -22,8 +22,6 @@ public class ProdutoGUI extends JPanel {
     private final Color ACCENT_COLOR = new Color(32, 201, 151);
     private final Color DANGER_COLOR = new Color(230, 86, 86);
     private final Color TEXT_COLOR = new Color(51, 51, 51);
-    private final Color SECONDARY_TEXT = new Color(120, 120, 120);
-
     @SuppressWarnings("unused")
     public ProdutoGUI() {
         setLayout(new BorderLayout());

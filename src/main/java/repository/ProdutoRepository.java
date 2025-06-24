@@ -15,6 +15,9 @@ public class ProdutoRepository {
 
     public ProdutoRepository() {
         produtos = carregarDoArquivo();
+        if (produtos.isEmpty()) {
+            adicionarProdutosPadrao();
+        }
     }
 
     public void adicionar(Produto p) {
@@ -28,6 +31,7 @@ public class ProdutoRepository {
     }
 
     public List<Produto> listar() {
+        produtos = carregarDoArquivo();
         return new ArrayList<>(produtos);
     }
 
@@ -82,5 +86,51 @@ public class ProdutoRepository {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    private void adicionarProdutosPadrao() {
+        // Smartphones
+        adicionar(new Produto("iPhone 14 Pro", "Celulares", "Apple", 8999.99, 15));
+        adicionar(new Produto("Samsung Galaxy S23", "Celulares", "Samsung", 5999.99, 20));
+        adicionar(new Produto("Xiaomi Redmi Note 12", "Celulares", "Xiaomi", 1899.99, 25));
+        
+        // Notebooks
+        adicionar(new Produto("MacBook Pro M2", "Notebooks", "Apple", 15999.99, 8));
+        adicionar(new Produto("Dell Inspiron 15", "Notebooks", "Dell", 4599.99, 12));
+        adicionar(new Produto("Lenovo ThinkPad X1", "Notebooks", "Lenovo", 8999.99, 10));
+        
+        // Tablets
+        adicionar(new Produto("iPad Air", "Tablets", "Apple", 4999.99, 15));
+        adicionar(new Produto("Samsung Galaxy Tab S9", "Tablets", "Samsung", 3999.99, 18));
+        
+        // Fones de Ouvido
+        adicionar(new Produto("AirPods Pro", "Fones de Ouvido", "Apple", 2499.99, 30));
+        adicionar(new Produto("Sony WH-1000XM5", "Fones de Ouvido", "Sony", 2999.99, 12));
+        adicionar(new Produto("JBL Tune 510BT", "Fones de Ouvido", "JBL", 399.99, 40));
+        
+        // Televisões
+        adicionar(new Produto("LG OLED C3 55\"", "Televisões", "LG", 8999.99, 8));
+        adicionar(new Produto("Samsung QLED 65\"", "Televisões", "Samsung", 7999.99, 10));
+        
+        // Monitores
+        adicionar(new Produto("Dell UltraSharp 27\"", "Monitores", "Dell", 1899.99, 15));
+        adicionar(new Produto("ASUS ProArt 24\"", "Monitores", "Asus", 1299.99, 20));
+        
+        // Câmeras
+        adicionar(new Produto("Sony Alpha A7 IV", "Câmeras", "Sony", 15999.99, 5));
+        adicionar(new Produto("Canon EOS R6", "Câmeras", "Canon", 12999.99, 8));
+        
+        // Componentes
+        adicionar(new Produto("NVIDIA RTX 4080", "Componentes", "Nvidia", 8999.99, 6));
+        adicionar(new Produto("Intel Core i9-13900K", "Componentes", "Intel", 3999.99, 12));
+        
+        // Periféricos
+        adicionar(new Produto("Logitech MX Master 3", "Periféricos", "Logitech", 599.99, 25));
+        adicionar(new Produto("Razer BlackWidow V3", "Periféricos", "Razer", 899.99, 18));
+        
+        // Acessórios
+        adicionar(new Produto("Apple Watch Series 8", "Acessórios", "Apple", 3999.99, 20));
+        adicionar(new Produto("Samsung Galaxy Watch 6", "Acessórios", "Samsung", 2499.99, 15));
+        
     }
 }

@@ -64,6 +64,7 @@ private void initComponents() {
     ((JPanel)getContentPane()).setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 }
 
+    @SuppressWarnings("unused")
     private JPanel createClientePanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(new TitledBorder("Dados do Cliente"));
@@ -92,6 +93,7 @@ private void initComponents() {
         return panel;
     }
 
+    @SuppressWarnings("unused")
     private JPanel createProdutoPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(new TitledBorder("Dados do Produto"));
@@ -170,6 +172,7 @@ private void initComponents() {
         return panel;
     }
 
+    @SuppressWarnings("unused")
     private JPanel createActionsPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton pagamentoBtn = new JButton("Pagamento");

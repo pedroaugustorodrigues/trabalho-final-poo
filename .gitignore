@@ -6,3 +6,5 @@ usuarios.dat
 
 # Ignorar pasta de arquivos compilados
 bin/
+
+out/

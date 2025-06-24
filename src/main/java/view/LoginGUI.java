@@ -16,10 +16,17 @@ public class LoginGUI extends JFrame {
     private JTextField emailField;
     private JPasswordField senhaField;
     private Point initialClick;
+    private JPanel mainPanel;
+    private JPanel leftPanel;
+    private JPanel rightPanel;
+    @SuppressWarnings("unused")
+    private boolean mostrandoLogin = true;
 
     private static final Color COR_PAINEL_ESQUERDO = new Color(108, 99, 255);
     private static final Color COR_BOTAO_LOGIN = new Color(108, 99, 255);
+    private static final Color COR_BOTAO_REGISTRO = new Color(255, 255, 255);
     private static final Color COR_TEXTO_BOTAO = Color.WHITE;
+    private static final Color COR_TEXTO_BOTAO_REGISTRO = new Color(108, 99, 255);
     private static final Color COR_FUNDO_DIREITO = Color.WHITE;
 
     public LoginGUI(AutenticacaoService autenticacaoService) {
@@ -29,10 +36,14 @@ public class LoginGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setUndecorated(true);
-
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
 
-        JPanel mainPanel = new JPanel(new GridLayout(1, 2));
+        mainPanel = new JPanel(new GridLayout(1, 2));
+        leftPanel = createLeftPanel();
+        rightPanel = createRightPanel();
+        mainPanel.add(leftPanel);
+        mainPanel.add(rightPanel);
+        add(mainPanel);
         
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
@@ -54,11 +65,6 @@ public class LoginGUI extends JFrame {
                 setLocation(X, Y);
             }
         });
-
-        mainPanel.add(createLeftPanel());
-        mainPanel.add(createRightPanel());
-
-        add(mainPanel);
     }
 
     private JPanel createLeftPanel() {
@@ -66,7 +72,7 @@ public class LoginGUI extends JFrame {
         leftPanel.setBackground(COR_PAINEL_ESQUERDO);
         leftPanel.setBorder(new EmptyBorder(50, 50, 50, 50));
 
-        JLabel welcomeLabel = new JLabel("<html>Bem vindo ao<br>Sistema.</html>", SwingConstants.LEFT);
+        JLabel welcomeLabel = new JLabel("<html>Seja Bem-Vindo(a)</html>", SwingConstants.LEFT);
         welcomeLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
         welcomeLabel.setForeground(Color.WHITE);
         leftPanel.add(welcomeLabel, BorderLayout.NORTH);
@@ -85,6 +91,7 @@ public class LoginGUI extends JFrame {
         return leftPanel;
     }
 
+    @SuppressWarnings("unused")
     private JPanel createRightPanel() {
         JPanel rightPanel = new JPanel();
         rightPanel.setBackground(COR_FUNDO_DIREITO);
@@ -102,33 +109,40 @@ public class LoginGUI extends JFrame {
 
         gbc.anchor = GridBagConstraints.NORTHWEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        
-        JLabel titleLabel = new JLabel("Acessar");
+        JLabel titleLabel = new JLabel("Acessar", SwingConstants.CENTER);
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
         titleLabel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.DARK_GRAY));
         gbc.weighty = 0.1;
         rightPanel.add(titleLabel, gbc);
 
         emailField = new JTextField(20);
-        JPanel emailPanel = createInputPanelWithIcon("/images/user-icon.png", emailField);
+        setPlaceholder(emailField, "E-mail");
+        JPanel emailPanel = createInputPanelWithIcon("/images/email-icon.png", emailField);
         gbc.weighty = 0.2;
         rightPanel.add(emailPanel, gbc);
 
         senhaField = new JPasswordField(20);
+        setPlaceholder(senhaField, "Senha");
         JPanel senhaPanel = createInputPanelWithIcon("/images/lock-icon.png", senhaField);
         rightPanel.add(senhaPanel, gbc);
 
-        gbc.weighty = 0.4;
+        gbc.weighty = 0.3;
         rightPanel.add(new JLabel(), gbc);
 
-        JButton loginButton = createRoundedButton("Login");
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 0, 10));
+        buttonPanel.setOpaque(false);
+        JButton loginButton = createRoundedButton("Login", COR_BOTAO_LOGIN, COR_TEXTO_BOTAO);
         loginButton.addActionListener(e -> performLogin());
+        buttonPanel.add(loginButton);
+        JButton registerButton = createRoundedButton("Registrar", COR_BOTAO_REGISTRO, COR_TEXTO_BOTAO_REGISTRO);
+        registerButton.setBorder(BorderFactory.createLineBorder(COR_BOTAO_LOGIN, 2));
+        registerButton.addActionListener(e -> alternarParaRegistro());
+        buttonPanel.add(registerButton);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.ipady = 15;
         gbc.weighty = 0.1;
         gbc.anchor = GridBagConstraints.SOUTH;
-        rightPanel.add(loginButton, gbc);
-
+        rightPanel.add(buttonPanel, gbc);
         return rightPanel;
     }
     
@@ -151,7 +165,7 @@ public class LoginGUI extends JFrame {
         return panel;
     }
 
-    private JButton createRoundedButton(String text) {
+    private JButton createRoundedButton(String text, Color backgroundColor, Color textColor) {
         JButton button = new JButton(text) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -164,8 +178,8 @@ public class LoginGUI extends JFrame {
                 g2.dispose();
             }
         };
-        button.setBackground(COR_BOTAO_LOGIN);
-        button.setForeground(COR_TEXTO_BOTAO);
+        button.setBackground(backgroundColor);
+        button.setForeground(textColor);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
@@ -173,6 +187,7 @@ public class LoginGUI extends JFrame {
         return button;
     }
     
+    @SuppressWarnings("unused")
     private JButton createExitButton() {
         JButton button = new JButton();
         try {
@@ -187,6 +202,155 @@ public class LoginGUI extends JFrame {
         button.setFocusPainted(false);
         button.addActionListener(e -> System.exit(0));
         return button;
+    }
+
+    private void alternarParaRegistro() {
+        mainPanel.remove(rightPanel);
+        rightPanel = createRegisterPanel();
+        mainPanel.add(rightPanel);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+        mostrandoLogin = false;
+    }
+
+    private void alternarParaLogin() {
+        mainPanel.remove(rightPanel);
+        rightPanel = createRightPanel();
+        mainPanel.add(rightPanel);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+        mostrandoLogin = true;
+    }
+
+    @SuppressWarnings("unused")
+    private JPanel createRegisterPanel() {
+        JPanel registerPanel = new JPanel();
+        registerPanel.setBackground(COR_FUNDO_DIREITO);
+        registerPanel.setLayout(new GridBagLayout());
+        registerPanel.setBorder(new EmptyBorder(20, 40, 20, 40));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 5, 10, 5);
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        JButton exitButton = createExitButton();
+        gbc.anchor = GridBagConstraints.NORTHEAST;
+        registerPanel.add(exitButton, gbc);
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JLabel titleLabel = new JLabel("Registrar Conta", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
+        titleLabel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.DARK_GRAY));
+        gbc.weighty = 0.1;
+        registerPanel.add(titleLabel, gbc);
+        JTextField nomeField = new JTextField(20);
+        setPlaceholder(nomeField, "Nome completo");
+        JPanel nomePanel = createInputPanelWithIcon("/images/user-icon.png", nomeField);
+        gbc.weighty = 0.2;
+        registerPanel.add(nomePanel, gbc);
+        JTextField cpfField = new JTextField(20);
+        setPlaceholder(cpfField, "CPF");
+        JPanel cpfPanel = createInputPanelWithIcon("/images/user-icon.png", cpfField);
+        gbc.weighty = 0.2;
+        registerPanel.add(cpfPanel, gbc);
+        JTextField emailField = new JTextField(20);
+        setPlaceholder(emailField, "E-mail");
+        JPanel emailPanel = createInputPanelWithIcon("/images/email-icon.png", emailField);
+        registerPanel.add(emailPanel, gbc);
+        JPasswordField senhaField = new JPasswordField(20);
+        setPlaceholder(senhaField, "Senha");
+        JPanel senhaPanel = createInputPanelWithIcon("/images/lock-icon.png", senhaField);
+        registerPanel.add(senhaPanel, gbc);
+        JPasswordField confirmarSenhaField = new JPasswordField(20);
+        setPlaceholder(confirmarSenhaField, "Confirmar senha");
+        JPanel confirmarSenhaPanel = createInputPanelWithIcon("/images/lock-icon.png", confirmarSenhaField);
+        registerPanel.add(confirmarSenhaPanel, gbc);
+        JPanel tipoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        tipoPanel.setOpaque(false);
+        JLabel tipoLabel = new JLabel("Tipo de Usuário:");
+        tipoLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        JRadioButton rbCliente = new JRadioButton("Cliente");
+        JRadioButton rbGestor = new JRadioButton("Gestor");
+        rbCliente.setBackground(COR_FUNDO_DIREITO);
+        rbGestor.setBackground(COR_FUNDO_DIREITO);
+        ButtonGroup tipoGroup = new ButtonGroup();
+        tipoGroup.add(rbCliente);
+        tipoGroup.add(rbGestor);
+        tipoPanel.add(tipoLabel);
+        tipoPanel.add(rbCliente);
+        tipoPanel.add(rbGestor);
+        gbc.weighty = 0.1;
+        registerPanel.add(tipoPanel, gbc);
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 0, 10));
+        buttonPanel.setOpaque(false);
+        JButton cadastrarButton = createRoundedButton("Cadastrar", COR_BOTAO_LOGIN, COR_TEXTO_BOTAO);
+        cadastrarButton.addActionListener(e -> {
+            String nome = nomeField.getText().trim();
+            String cpf = cpfField.getText().trim();
+            String email = emailField.getText().trim();
+            String senha = new String(senhaField.getPassword());
+            String confirmarSenha = new String(confirmarSenhaField.getPassword());
+            String tipoUsuario = rbGestor.isSelected() ? "gestor" : "cliente";
+
+            if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (!senha.equals(confirmarSenha)) {
+                JOptionPane.showMessageDialog(this, "As senhas não coincidem.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (senha.length() < 4) {
+                JOptionPane.showMessageDialog(this, "A senha deve ter pelo menos 4 caracteres.", "Erro de Validação", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            try {
+                autenticacaoService.cadastrarUsuario(nome, cpf, email, senha, tipoUsuario);
+                alternarParaLogin();
+                JOptionPane.showMessageDialog(this, "Conta cadastrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao cadastrar: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        buttonPanel.add(cadastrarButton);
+        JButton voltarButton = createRoundedButton("Já tem conta? Acessar", COR_BOTAO_REGISTRO, COR_TEXTO_BOTAO_REGISTRO);
+        voltarButton.setBorder(BorderFactory.createLineBorder(COR_BOTAO_LOGIN, 2));
+        voltarButton.addActionListener(e -> alternarParaLogin());
+        buttonPanel.add(voltarButton);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.ipady = 15;
+        gbc.weighty = 0.1;
+        gbc.anchor = GridBagConstraints.SOUTH;
+        registerPanel.add(buttonPanel, gbc);
+        return registerPanel;
+    }
+
+    // Adiciona placeholder a JTextField ou JPasswordField
+    private void setPlaceholder(JTextField field, String placeholder) {
+        field.setForeground(Color.GRAY);
+        field.setText(placeholder);
+        field.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (field.getText().equals(placeholder)) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                    if (field instanceof JPasswordField) {
+                        ((JPasswordField) field).setEchoChar('•');
+                    }
+                }
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (field.getText().isEmpty()) {
+                    field.setForeground(Color.GRAY);
+                    field.setText(placeholder);
+                    if (field instanceof JPasswordField) {
+                        ((JPasswordField) field).setEchoChar((char) 0);
+                    }
+                }
+            }
+        });
+        if (field instanceof JPasswordField) {
+            ((JPasswordField) field).setEchoChar((char) 0);
+        }
     }
 
     private void performLogin() {
@@ -206,7 +370,7 @@ public class LoginGUI extends JFrame {
             if (usuarioLogado instanceof main.java.model.Gestor) {
                 new GestorDashboardGUI(usuarioLogado).setVisible(true);
             } else if (usuarioLogado instanceof main.java.model.Cliente) {
-                new ClienteDashboardGUI().setVisible(true);
+                new ClienteDashboardGUI(usuarioLogado).setVisible(true);
             }
 
         } catch (AutenticacaoException ex) {

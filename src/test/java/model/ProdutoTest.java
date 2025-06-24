@@ -1,7 +1,5 @@
 package test.java.model;
 
-import main.java.model.Categoria;
-import main.java.model.Marca;
 import main.java.model.Produto;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

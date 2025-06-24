@@ -31,7 +31,7 @@ class VendaRepositoryTest {
     }
 
     private Venda criarVendaExemplo() {
-        Cliente cliente = new Cliente("Teste Cliente", "cliente@email.com", "senha");
+        Cliente cliente = new Cliente("Teste Cliente", "123.456.789-00", "cliente@email.com", "99999-9999", "senha");
 
         Produto produto = new Produto("Notebook", new Categoria("Informática"), new Marca("Dell"), 3500.0, 5);
         ItemVenda item = new ItemVenda(produto, 2, "M", "Preto");

@@ -21,7 +21,7 @@ class UsuarioRepositoryTest {
     @Test
     void testAdicionarEListarUsuario() {
         UsuarioRepositoryEmMemoria repo = new UsuarioRepositoryEmMemoria();
-        Usuario u = new Cliente("João", "joao@email.com", "senha123");
+        Usuario u = new Cliente("João", "123.456.789-00", "joao@email.com", "99999-9999", "senha123");
 
         repo.adicionarUsuario(u);
         List<Usuario> usuarios = repo.listarTodos();
@@ -33,7 +33,7 @@ class UsuarioRepositoryTest {
     @Test
     void testBuscarPorId() {
         UsuarioRepositoryEmMemoria repo = new UsuarioRepositoryEmMemoria();
-        Usuario u = new Cliente("Maria", "maria@email.com", "1234");
+        Usuario u = new Cliente("Maria", "123.456.789-00", "maria@email.com", "99999-9999", "1234");
         repo.adicionarUsuario(u);
 
         Optional<Usuario> encontrado = repo.buscarPorId(u.getId());
@@ -45,7 +45,7 @@ class UsuarioRepositoryTest {
     @Test
     void testBuscarPorEmail() {
         UsuarioRepositoryEmMemoria repo = new UsuarioRepositoryEmMemoria();
-        Usuario u = new Cliente("Ana", "ana@email.com", "abc");
+        Usuario u = new Cliente("Ana", "123.456.789-00", "ana@email.com", "99999-9999", "abc");
         repo.adicionarUsuario(u);
 
         Optional<Usuario> encontrado = repo.buscarPorEmail("ana@email.com");
@@ -57,10 +57,10 @@ class UsuarioRepositoryTest {
     @Test
     void testAtualizarUsuario() {
         UsuarioRepositoryEmMemoria repo = new UsuarioRepositoryEmMemoria();
-        Usuario u = new Cliente("Pedro", "pedro@email.com", "senha");
+        Usuario u = new Cliente("Pedro", "123.456.789-00", "pedro@email.com", "99999-9999", "senha");
         repo.adicionarUsuario(u);
 
-        Usuario atualizado = new Cliente("Pedro Atualizado", "pedro@email.com", "novaSenha");
+        Usuario atualizado = new Cliente("Pedro Atualizado", "123.456.789-00", "pedro@email.com", "99999-9999", "novaSenha");
         FieldUtils.setIdManualmente(atualizado, u.getId());
 
         repo.atualizarUsuario(atualizado);
@@ -73,7 +73,7 @@ class UsuarioRepositoryTest {
     @Test
     void testRemoverUsuario() {
         UsuarioRepositoryEmMemoria repo = new UsuarioRepositoryEmMemoria();
-        Usuario u = new Cliente("Lucas", "lucas@email.com", "pass");
+        Usuario u = new Cliente("Lucas", "123.456.789-00", "lucas@email.com", "99999-9999", "pass");
         repo.adicionarUsuario(u);
 
         boolean removido = repo.removerUsuario(u.getId());

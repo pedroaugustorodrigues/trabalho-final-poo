@@ -14,16 +14,16 @@ public class AutenticacaoService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public void cadastrarUsuario(String nome, String email, String senha, String tipo) throws RegistroDuplicadoException {
+    public void cadastrarUsuario(String nome, String cpf, String email, String senha, String tipo) throws RegistroDuplicadoException {
         if (usuarioRepository.buscarPorEmail(email).isPresent()) {
             throw new RegistroDuplicadoException("Email já cadastrado: " + email);
         }
 
         Usuario novoUsuario;
         if ("cliente".equalsIgnoreCase(tipo)) {
-            novoUsuario = new Cliente(nome, email, senha);
+            novoUsuario = new Cliente(nome, cpf, email, "não informado", senha);
         } else if ("gestor".equalsIgnoreCase(tipo)) {
-            novoUsuario = new Gestor(nome, email, senha);
+            novoUsuario = new Gestor(nome, cpf, email, senha);
         } else {
             throw new IllegalArgumentException("Tipo de usuário inválido: " + tipo);
         }

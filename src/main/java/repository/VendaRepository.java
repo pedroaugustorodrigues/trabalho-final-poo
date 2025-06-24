@@ -41,6 +41,12 @@ public class VendaRepository {
         return vendas.stream().filter(v -> v.getId() == id).findFirst();
     }
 
+    public List<Venda> listarPorCliente(main.java.model.Cliente cliente) {
+        return vendas.stream()
+                .filter(v -> v.getCliente() != null && v.getCliente().getId() == cliente.getId())
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     private void salvarNoArquivo() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(arquivo))) {
             oos.writeObject(vendas);

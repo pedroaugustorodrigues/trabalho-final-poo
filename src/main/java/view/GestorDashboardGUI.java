@@ -2,6 +2,7 @@ package main.java.view;
 
 import main.java.model.Venda;
 import main.java.model.Usuario;
+import main.java.model.Gestor;
 import main.java.repository.VendaRepository;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -13,9 +14,7 @@ import java.util.Locale;
 
 public class GestorDashboardGUI extends JFrame {
 
-    private final Color SIDEBAR_BG = new Color(23, 34, 58);
     private final Color CONTENT_BG = new Color(240, 242, 245);
-    private final Color CARD_BG = Color.WHITE;
     private final VendaRepository vendaRepository;
     private final Usuario usuarioAtual;
     
@@ -31,6 +30,15 @@ public class GestorDashboardGUI extends JFrame {
     private JPanel summaryPanel;
 
     public GestorDashboardGUI(Usuario usuarioAtual) {
+        // Verificar se o usuário é um Gestor
+        if (!(usuarioAtual instanceof Gestor)) {
+            JOptionPane.showMessageDialog(null, 
+                "Acesso negado! Apenas gestores podem acessar esta área.", 
+                "Erro de Acesso", 
+                JOptionPane.ERROR_MESSAGE);
+            throw new SecurityException("Acesso negado: usuário não é um Gestor");
+        }
+        
         this.usuarioAtual = usuarioAtual;
         this.vendaRepository = new VendaRepository();
         setTitle("Backoffice");
@@ -94,6 +102,7 @@ public class GestorDashboardGUI extends JFrame {
         return sidebar;
     }
 
+    @SuppressWarnings("unused")
     private JButton createSidebarButton(String text, String cardName, Color selectedColor, Color bgColor) {
         JButton button = new JButton(text);
 
@@ -136,6 +145,7 @@ public class GestorDashboardGUI extends JFrame {
         return button;
     }
 
+    @SuppressWarnings("unused")
     private void updateSidebarSelection(String text) {
         throw new UnsupportedOperationException("Unimplemented method 'updateSidebarSelection'");
     }
@@ -151,6 +161,16 @@ public class GestorDashboardGUI extends JFrame {
         welcomeLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Exibir CPF do gestor
+        String cpf = "";
+        if (usuarioAtual instanceof Gestor) {
+            cpf = ((Gestor) usuarioAtual).getCpf();
+        }
+        JLabel cpfLabel = new JLabel("CPF: " + cpf);
+        cpfLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        cpfLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        cpfLabel.setForeground(new Color(100, 116, 139));
+
         summaryPanel = createSummaryPanel();
         summaryPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -158,7 +178,9 @@ public class GestorDashboardGUI extends JFrame {
         actionsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         mainPanel.add(welcomeLabel);
-        mainPanel.add(Box.createVerticalStrut(80));
+        mainPanel.add(Box.createVerticalStrut(10));
+        mainPanel.add(cpfLabel);
+        mainPanel.add(Box.createVerticalStrut(70));
         mainPanel.add(summaryPanel);
         mainPanel.add(Box.createVerticalStrut(30));
         mainPanel.add(actionsPanel);
@@ -297,6 +319,7 @@ public class GestorDashboardGUI extends JFrame {
         cardLayout.show(contentPanel, panelName);
     }
     
+    @SuppressWarnings("unused")
     private JPanel createPlaceholderPanel(String text) {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(CONTENT_BG);
@@ -316,11 +339,13 @@ public class GestorDashboardGUI extends JFrame {
         
         double receitaLiquida = faturamento;
         
+        @SuppressWarnings("deprecation")
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
         currencyFormat.setMaximumFractionDigits(2);
         currencyFormat.setMinimumFractionDigits(2);
         currencyFormat.setMaximumIntegerDigits(10);
 
+        @SuppressWarnings("unused")
         JPanel homePanel = (JPanel) contentPanel.getComponent(0);
         updateSummaryCard(summaryPanel, 0, currencyFormat.format(faturamento));
         updateSummaryCard(summaryPanel, 1, currencyFormat.format(receitaLiquida));

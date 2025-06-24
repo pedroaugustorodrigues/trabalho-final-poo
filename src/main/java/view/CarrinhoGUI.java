@@ -3,6 +3,11 @@ package main.java.view;
 import main.java.model.Carrinho;
 import main.java.model.CarrinhoItem;
 import main.java.model.Produto;
+import main.java.model.Cliente;
+import main.java.model.ItemVenda;
+import main.java.model.Venda;
+import main.java.repository.ProdutoRepository;
+import main.java.repository.VendaRepository;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +15,9 @@ import java.awt.geom.RoundRectangle2D;
 
 public class CarrinhoGUI extends JFrame {
     private Carrinho carrinho;
+    private Cliente cliente;
+    private ProdutoRepository produtoRepository;
+    private VendaRepository vendaRepository;
     private JPanel itensPanel;
     private JLabel totalLabel;
 
@@ -17,8 +25,11 @@ public class CarrinhoGUI extends JFrame {
     private Color azulEscuro = new Color(40, 40, 106);
     private Color cinzaClaro = new Color(245, 245, 245);
 
-    public CarrinhoGUI(Carrinho carrinho) {
+    public CarrinhoGUI(Carrinho carrinho, Cliente cliente, ProdutoRepository produtoRepository, VendaRepository vendaRepository) {
         this.carrinho = carrinho;
+        this.cliente = cliente;
+        this.produtoRepository = produtoRepository;
+        this.vendaRepository = vendaRepository;
 
         setTitle("Carrinho");
         setSize(1200, 800);
@@ -34,6 +45,7 @@ public class CarrinhoGUI extends JFrame {
         atualizarLista();
     }
 
+    @SuppressWarnings("unused")
     private JPanel criarTopo() {
         JPanel topo = new JPanel();
         topo.setLayout(new BoxLayout(topo, BoxLayout.Y_AXIS));
@@ -97,6 +109,7 @@ public class CarrinhoGUI extends JFrame {
         return scroll;
     }
 
+    @SuppressWarnings("unused")
     private JPanel criarRodape() {
         JPanel rodape = new JPanel(new BorderLayout());
         rodape.setBackground(cinzaClaro);
@@ -122,6 +135,7 @@ public class CarrinhoGUI extends JFrame {
         return rodape;
     }
 
+    @SuppressWarnings("unused")
     private void abrirModalPagamento() {
         if (carrinho.isVazio()) {
             JOptionPane.showMessageDialog(this, "Seu carrinho está vazio.");
@@ -202,12 +216,39 @@ public class CarrinhoGUI extends JFrame {
                 JOptionPane.showMessageDialog(modal, "Selecione uma forma de pagamento.");
                 return;
             }
-            double total = carrinho.getTotal();
+
+            // Atualizar estoque dos produtos
+            boolean estoqueOk = true;
+            for (CarrinhoItem item : carrinho.getItens()) {
+                Produto produto = item.getProduto();
+                int novaQtd = produto.getQtd() - item.getQuantidade();
+                if (novaQtd < 0) {
+                    estoqueOk = false;
+                    JOptionPane.showMessageDialog(this, "Estoque insuficiente para o produto: " + produto.getDescricao());
+                    break;
+                }
+            }
+            if (!estoqueOk) return;
+
+            for (CarrinhoItem item : carrinho.getItens()) {
+                Produto produto = item.getProduto();
+                produto.setQtd(produto.getQtd() - item.getQuantidade());
+                produtoRepository.atualizar(produto);
+            }
+
+            java.util.List<ItemVenda> itensVenda = new java.util.ArrayList<>();
+            for (CarrinhoItem item : carrinho.getItens()) {
+                itensVenda.add(new ItemVenda(item.getProduto(), item.getQuantidade(), null, null));
+            }
+
+            // Registrar venda
+            Venda venda = new Venda(cliente, itensVenda);
+            vendaRepository.adicionar(venda);
+
+            modal.dispose();
+            JOptionPane.showMessageDialog(this, "Compra finalizada com sucesso!");
             carrinho.limpar();
             atualizarLista();
-            modal.dispose();
-            JOptionPane.showMessageDialog(this, "Compra finalizada! Total pago: R$ " + String.format("%.2f", total), "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            dispose();
         });
 
         painel.add(Box.createVerticalStrut(20));
@@ -218,8 +259,7 @@ public class CarrinhoGUI extends JFrame {
         modal.setVisible(true);
     }
 
-
-
+    @SuppressWarnings("unused")
     private JToggleButton criarBotaoForma(String texto, String caminhoImg) {
         ImageIcon icon = new ImageIcon(caminhoImg);
         Image img = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
@@ -251,6 +291,7 @@ public class CarrinhoGUI extends JFrame {
         itensPanel.repaint();
     }
 
+    @SuppressWarnings("unused")
     private JPanel criarCardItem(CarrinhoItem item) {
         RoundedPanel card = new RoundedPanel(20);
         card.setLayout(new BoxLayout(card, BoxLayout.X_AXIS));

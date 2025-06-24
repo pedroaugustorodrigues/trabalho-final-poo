@@ -74,7 +74,7 @@ public class ConfiguracoesGUI extends JPanel {
         sectionTitle.setBorder(new EmptyBorder(0, 0, 15, 0));
         section.add(sectionTitle, BorderLayout.NORTH);
 
-        JPanel infoPanel = new JPanel(new GridLayout(3, 2, 15, 10));
+        JPanel infoPanel = new JPanel(new GridLayout(4, 2, 15, 10));
         infoPanel.setBackground(CARD_BG);
 
         infoPanel.add(createInfoLabel("Nome:"));
@@ -83,6 +83,15 @@ public class ConfiguracoesGUI extends JPanel {
         infoPanel.add(createInfoValue(usuario.getEmail()));
         infoPanel.add(createInfoLabel("Tipo:"));
         infoPanel.add(createInfoValue(usuario instanceof main.java.model.Gestor ? "Gestor" : "Cliente"));
+        infoPanel.add(createInfoLabel("CPF:"));
+        String cpf = "";
+        try {
+            java.lang.reflect.Method getCpf = usuario.getClass().getMethod("getCpf");
+            cpf = (String) getCpf.invoke(usuario);
+        } catch (Exception e) {
+            cpf = "N/A";
+        }
+        infoPanel.add(createInfoValue(cpf));
 
         section.add(infoPanel, BorderLayout.CENTER);
         return section;
@@ -280,9 +289,12 @@ public class ConfiguracoesGUI extends JPanel {
             "Confirmar Saida", 
             JOptionPane.YES_NO_OPTION, 
             JOptionPane.QUESTION_MESSAGE);
-        
         if (confirmacao == JOptionPane.YES_OPTION) {
-            System.exit(0);
+            Window window = SwingUtilities.getWindowAncestor(this);
+            if (window != null) {
+                window.dispose();
+            }
+            new main.java.view.LoginGUI(new main.java.service.AutenticacaoService(new main.java.repository.UsuarioRepository())).setVisible(true);
         }
     }
 } 

@@ -33,7 +33,7 @@ class AutenticacaoServiceTest {
 
     @Test
     void testCadastrarUsuarioClienteComSucesso() throws RegistroDuplicadoException {
-        autenticacaoService.cadastrarUsuario("João", "joao@email.com", "senha123", "cliente");
+        autenticacaoService.cadastrarUsuario("João", "123.456.789-00", "joao@email.com", "senha123", "cliente");
 
         Usuario usuario = usuarioRepository.buscarPorEmail("joao@email.com").orElse(null);
         assertNotNull(usuario);
@@ -43,7 +43,7 @@ class AutenticacaoServiceTest {
 
     @Test
     void testCadastrarUsuarioGestorComSucesso() throws RegistroDuplicadoException {
-        autenticacaoService.cadastrarUsuario("Maria", "maria@email.com", "senha123", "gestor");
+        autenticacaoService.cadastrarUsuario("Maria", "123.456.789-00", "maria@email.com", "senha123", "gestor");
 
         Usuario usuario = usuarioRepository.buscarPorEmail("maria@email.com").orElse(null);
         assertNotNull(usuario);
@@ -53,10 +53,10 @@ class AutenticacaoServiceTest {
 
     @Test
     void testCadastrarUsuarioComEmailDuplicadoDeveLancarExcecao() throws RegistroDuplicadoException {
-        autenticacaoService.cadastrarUsuario("Ana", "ana@email.com", "senha123", "cliente");
+        autenticacaoService.cadastrarUsuario("Ana", "123.456.789-00", "ana@email.com", "senha123", "cliente");
 
         RegistroDuplicadoException ex = assertThrows(RegistroDuplicadoException.class, () -> {
-            autenticacaoService.cadastrarUsuario("Ana2", "ana@email.com", "senha456", "cliente");
+            autenticacaoService.cadastrarUsuario("Ana2", "123.456.789-00", "ana@email.com", "senha456", "cliente");
         });
 
         assertTrue(ex.getMessage().contains("Email já cadastrado"));
@@ -64,7 +64,7 @@ class AutenticacaoServiceTest {
 
     @Test
     void testLoginComSucesso() throws Exception {
-        autenticacaoService.cadastrarUsuario("Pedro", "pedro@email.com", "senhaSecreta", "cliente");
+        autenticacaoService.cadastrarUsuario("Pedro", "123.456.789-00", "pedro@email.com", "senhaSecreta", "cliente");
 
         Usuario usuario = autenticacaoService.login("pedro@email.com", "senhaSecreta");
 
@@ -82,7 +82,7 @@ class AutenticacaoServiceTest {
 
     @Test
     void testLoginComSenhaIncorretaDeveLancarExcecao() throws RegistroDuplicadoException {
-        autenticacaoService.cadastrarUsuario("Lucas", "lucas@email.com", "senhaCerta", "gestor");
+        autenticacaoService.cadastrarUsuario("Lucas", "123.456.789-00", "lucas@email.com", "senhaCerta", "gestor");
 
         AutenticacaoException ex = assertThrows(AutenticacaoException.class, () -> {
             autenticacaoService.login("lucas@email.com", "senhaErrada");
@@ -93,7 +93,7 @@ class AutenticacaoServiceTest {
 
     @Test
     void testAutenticarRetornaTrueParaCredenciaisValidas() throws RegistroDuplicadoException {
-        autenticacaoService.cadastrarUsuario("Carla", "carla@email.com", "123456", "cliente");
+        autenticacaoService.cadastrarUsuario("Carla", "123.456.789-00", "carla@email.com", "123456", "cliente");
 
         assertTrue(autenticacaoService.autenticar("carla@email.com", "123456"));
     }
@@ -105,7 +105,7 @@ class AutenticacaoServiceTest {
 
     @Test
     void testAutenticarRetornaFalseParaSenhaInvalida() throws RegistroDuplicadoException {
-        autenticacaoService.cadastrarUsuario("Pedro", "pedro2@email.com", "senha123", "gestor");
+        autenticacaoService.cadastrarUsuario("Pedro", "123.456.789-00", "pedro2@email.com", "senha123", "gestor");
 
         assertFalse(autenticacaoService.autenticar("pedro2@email.com", "senhaErrada"));
     }
