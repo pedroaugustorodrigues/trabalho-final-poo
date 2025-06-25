@@ -49,7 +49,7 @@ public class VendasGUI extends JPanel {
             new EmptyBorder(20, 20, 20, 20)
         ));
 
-        String[] colunas = {"Cód. da Venda", "Total", "Data", "Nome Cliente", "CPF Cliente", "Quantidade"};
+        String[] colunas = {"Cód. da Venda", "Total", "Data", "Nome Cliente", "CPF Cliente", "Quantidade", "Pagamento", "Endereço"};
         tableModel = new DefaultTableModel(colunas, 0) {
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -76,12 +76,14 @@ public class VendasGUI extends JPanel {
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(120);
-        table.getColumnModel().getColumn(1).setPreferredWidth(120);
-        table.getColumnModel().getColumn(2).setPreferredWidth(180);
-        table.getColumnModel().getColumn(3).setPreferredWidth(200);
-        table.getColumnModel().getColumn(4).setPreferredWidth(150);
-        table.getColumnModel().getColumn(5).setPreferredWidth(120);
+        table.getColumnModel().getColumn(0).setPreferredWidth(100);
+        table.getColumnModel().getColumn(1).setPreferredWidth(100);
+        table.getColumnModel().getColumn(2).setPreferredWidth(150);
+        table.getColumnModel().getColumn(3).setPreferredWidth(150);
+        table.getColumnModel().getColumn(4).setPreferredWidth(120);
+        table.getColumnModel().getColumn(5).setPreferredWidth(100);
+        table.getColumnModel().getColumn(6).setPreferredWidth(120);
+        table.getColumnModel().getColumn(7).setPreferredWidth(150);
 
         table.getTableHeader().setResizingAllowed(false);
 
@@ -194,7 +196,9 @@ public class VendasGUI extends JPanel {
                     venda.getData().format(formatter),
                     nomeCliente,
                     cpfCliente,
-                    quantidadeTotal
+                    quantidadeTotal,
+                    venda.getFormaPagamento() != null && !venda.getFormaPagamento().isEmpty() ? venda.getFormaPagamento() : "Não informado",
+                    venda.getEndereco() != null && !venda.getEndereco().isEmpty() ? venda.getEndereco() : "Não informado"
             });
         }
     }

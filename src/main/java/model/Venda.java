@@ -15,9 +15,11 @@ public class Venda implements Serializable {
     private List<ItemVenda> itens;
     private double total;
     private LocalDateTime data;
+    private String formaPagamento;
+    private String endereco;
 
     /**
-     * Cria uma venda com cliente e itens.
+     * Construtor padrão para uma venda com cliente e itens.
      */
     public Venda(Cliente cliente, List<ItemVenda> itens) {
         this.id = proximoId++;
@@ -25,6 +27,21 @@ public class Venda implements Serializable {
         this.itens = itens;
         this.data = LocalDateTime.now();
         this.total = calcularTotal();
+        this.formaPagamento = "";
+        this.endereco = "";
+    }
+
+    /**
+     * Construtor completo para uma venda com todos os dados.
+     */
+    public Venda(Cliente cliente, List<ItemVenda> itens, String formaPagamento, String endereco) {
+        this.id = proximoId++;
+        this.cliente = cliente;
+        this.itens = itens;
+        this.data = LocalDateTime.now();
+        this.total = calcularTotal();
+        this.formaPagamento = formaPagamento;
+        this.endereco = endereco;
     }
 
     private double calcularTotal() {
@@ -77,5 +94,21 @@ public class Venda implements Serializable {
 
     public void setData(LocalDateTime data) {
         this.data = data;
+    }
+
+    public String getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setFormaPagamento(String formaPagamento) {
+        this.formaPagamento = formaPagamento;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 } 

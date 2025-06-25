@@ -472,8 +472,14 @@ public class ClienteDashboardGUI extends JFrame {
         detalhes.append("📋 Detalhes da Compra\n\n");
         detalhes.append("Data: ").append(venda.getData().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))).append("\n");
         detalhes.append("Total: R$ ").append(String.format("%.2f", venda.getTotal())).append("\n");
-        detalhes.append("Itens: ").append(venda.getItens().size()).append("\n\n");
-        detalhes.append("📦 Produtos:\n");
+        detalhes.append("Itens: ").append(venda.getItens().size()).append("\n");
+        if (venda.getFormaPagamento() != null && !venda.getFormaPagamento().isEmpty()) {
+            detalhes.append("Pagamento: ").append(venda.getFormaPagamento()).append("\n");
+        }
+        if (venda.getEndereco() != null && !venda.getEndereco().isEmpty()) {
+            detalhes.append("Endereço: ").append(venda.getEndereco()).append("\n");
+        }
+        detalhes.append("\n📦 Produtos:\n");
 
         for (ItemVenda item : venda.getItens()) {
             detalhes.append("• ").append(item.getProduto().getDescricao())
@@ -801,7 +807,19 @@ public class ClienteDashboardGUI extends JFrame {
         finalizarBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         finalizarBtn.addActionListener(e -> {
             if (!carrinho.getItens().isEmpty()) {
-                finalizarCompra();
+                FinalizarCompraWizard wizard = new FinalizarCompraWizard(
+                    (JFrame) SwingUtilities.getWindowAncestor(this),
+                    carrinho.getTotal(),
+                    dados -> {
+                        String[] partes = dados.split("\\|");
+                        if (partes.length == 2) {
+                            finalizarCompra(partes[0], partes[1]);
+                        } else {
+                            finalizarCompra("", "");
+                        }
+                    }
+                );
+                wizard.setVisible(true);
             }
         });
         finalizarBtn.setEnabled(!carrinho.getItens().isEmpty());
@@ -1100,7 +1118,7 @@ public class ClienteDashboardGUI extends JFrame {
         return titleBar;
     }
 
-    private void finalizarCompra() {
+    private void finalizarCompra(String dadosPagamento, String dadosEndereco) {
         if (carrinho.getItens().isEmpty()) {
             JOptionPane.showMessageDialog(this, 
                 "❌ Seu carrinho está vazio!", 
@@ -1128,7 +1146,7 @@ public class ClienteDashboardGUI extends JFrame {
                     produto.setQtd(produto.getQtd() - item.getQuantidade());
                     produtoRepository.atualizar(produto);
                 }
-                main.java.model.Venda venda = new main.java.model.Venda((main.java.model.Cliente) usuarioAtual, itensVenda);
+                main.java.model.Venda venda = new main.java.model.Venda((main.java.model.Cliente) usuarioAtual, itensVenda, dadosPagamento, dadosEndereco);
                 venda.setTotal(carrinho.getTotal());
                 venda.setData(java.time.LocalDateTime.now());
                 vendaRepository.adicionar(venda);
@@ -1155,6 +1173,8 @@ public class ClienteDashboardGUI extends JFrame {
                     "✅ Compra finalizada com sucesso!\n\n" +
                     "Total: R$ " + String.format("%.2f", venda.getTotal()) + "\n" +
                     "Itens: " + venda.getItens().size() + "\n" +
+                    "Pagamento: " + (dadosPagamento.isEmpty() ? "Não informado" : dadosPagamento) + "\n" +
+                    "Endereço: " + (dadosEndereco.isEmpty() ? "Não informado" : dadosEndereco) + "\n" +
                     "Data: " + venda.getData().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
                     "Compra Realizada",
                     JOptionPane.INFORMATION_MESSAGE);

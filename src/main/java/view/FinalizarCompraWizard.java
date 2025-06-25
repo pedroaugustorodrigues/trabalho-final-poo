@@ -2,6 +2,7 @@ package main.java.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 /**
  * Wizard para finalizar compra (passo a passo de pagamento e entrega).
@@ -16,6 +17,7 @@ public class FinalizarCompraWizard extends JDialog {
     private String endereco = "";
     private double total;
     private Runnable onConfirmar;
+    private Consumer<String> onConfirmarComDados;
 
     private JPanel mainPanel;
     private JButton btnProximo;
@@ -38,6 +40,31 @@ public class FinalizarCompraWizard extends JDialog {
         super(parent, "Finalizar Compra", true);
         this.total = total;
         this.onConfirmar = onConfirmar;
+        setSize(480, 340);
+        setLocationRelativeTo(parent);
+        setResizable(false);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        mainPanel = new JPanel(new BorderLayout(0, 0));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(24, 32, 24, 32));
+        mainPanel.setBackground(Color.WHITE);
+        lblTitulo = new JLabel("Selecione a forma de pagamento", SwingConstants.CENTER);
+        lblTitulo.setFont(new Font("SansSerif", Font.BOLD, 20));
+        lblTitulo.setForeground(new Color(30, 41, 59));
+        mainPanel.add(lblTitulo, BorderLayout.NORTH);
+        add(mainPanel);
+        criarEtapa1();
+    }
+
+    /**
+     * Construtor do wizard de finalização de compra com callback para dados.
+     * @param parent janela pai
+     * @param total valor total da compra
+     * @param onConfirmarComDados ação a ser executada ao confirmar com dados de pagamento e endereço
+     */
+    public FinalizarCompraWizard(JFrame parent, double total, Consumer<String> onConfirmarComDados) {
+        super(parent, "Finalizar Compra", true);
+        this.total = total;
+        this.onConfirmarComDados = onConfirmarComDados;
         setSize(480, 340);
         setLocationRelativeTo(parent);
         setResizable(false);
@@ -175,6 +202,10 @@ public class FinalizarCompraWizard extends JDialog {
         btnConfirmar.setFont(new Font("SansSerif", Font.BOLD, 15));
         btnConfirmar.addActionListener(e -> {
             if (onConfirmar != null) onConfirmar.run();
+            if (onConfirmarComDados != null) {
+                String dados = formaPagamento + "|" + endereco;
+                onConfirmarComDados.accept(dados);
+            }
             dispose();
         });
         south.add(btnVoltar);
