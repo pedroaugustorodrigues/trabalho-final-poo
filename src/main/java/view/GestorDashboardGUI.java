@@ -212,10 +212,10 @@ public class GestorDashboardGUI extends JFrame {
         summaryPanel.setBackground(CONTENT_BG);
         summaryPanel.setBorder(new EmptyBorder(0, 24, 0, 24));
 
-        summaryPanel.add(createSummaryCard("Faturamento", "R$ 0,00", new Color(111, 66, 193), "/images/icon_money.png"));
-        summaryPanel.add(createSummaryCard("Receita líquida", "R$ 0,00", new Color(214, 51, 132), "/images/icon_receita.png"));
-        summaryPanel.add(createSummaryCard("Total de vendas", "0", new Color(32, 201, 151), "/images/icon_cart.png"));
-        summaryPanel.add(createSummaryCard("Ticket médio", "R$ 0,00", new Color(230, 86, 86), "/images/icon_ticket.png"));
+        summaryPanel.add(createSummaryCard("Faturamento", "R$ 0,00", new Color(111, 66, 193),""));
+        summaryPanel.add(createSummaryCard("Receita líquida", "R$ 0,00", new Color(214, 51, 132), ""));
+        summaryPanel.add(createSummaryCard("Total de vendas", "0", new Color(32, 201, 151), ""));
+        summaryPanel.add(createSummaryCard("Ticket médio", "R$ 0,00", new Color(230, 86, 86), ""));
 
         return summaryPanel;
     }
@@ -259,7 +259,7 @@ public class GestorDashboardGUI extends JFrame {
         ));
         card.setPreferredSize(new Dimension(220, 150));
 
-        ImageIcon icon = new ImageIcon("src/main/resources" + iconPath);
+        ImageIcon icon = new ImageIcon(getClass().getResource(iconPath));
         Image scaled = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
         JLabel iconLabel = new JLabel(new ImageIcon(scaled));
         iconLabel.setOpaque(false);
@@ -316,7 +316,7 @@ public class GestorDashboardGUI extends JFrame {
         panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         panel.setPreferredSize(new Dimension(200, 200));
 
-        ImageIcon icon = new ImageIcon("src/main/resources" + iconPath);
+        ImageIcon icon = new ImageIcon(getClass().getResource(iconPath));
         Image scaled = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
         JLabel iconLabel = new JLabel(new ImageIcon(scaled));
         iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -428,7 +428,7 @@ public class GestorDashboardGUI extends JFrame {
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         buttons.setOpaque(false);
 
-        JButton btnMin = new JButton(new ImageIcon("src/main/resources/images/minimize.png"));
+        JButton btnMin = new JButton(new ImageIcon(getClass().getResource("/images/minimize.png")));
         btnMin.setToolTipText("Minimizar");
         btnMin.setFocusPainted(false);
         btnMin.setBorderPainted(false);
@@ -437,7 +437,7 @@ public class GestorDashboardGUI extends JFrame {
         btnMin.addActionListener(e -> setState(JFrame.ICONIFIED));
         buttons.add(btnMin);
 
-        JButton btnMax = new JButton(new ImageIcon("src/main/resources/images/maximize.png"));
+        JButton btnMax = new JButton(new ImageIcon(getClass().getResource("/images/maximize.png")));
         btnMax.setToolTipText("Maximizar/Restaurar");
         btnMax.setFocusPainted(false);
         btnMax.setBorderPainted(false);
@@ -451,17 +451,17 @@ public class GestorDashboardGUI extends JFrame {
                 setBounds(bounds);
                 setShape(null);
                 isMaximized = true;
-                btnMax.setIcon(new ImageIcon("src/main/resources/images/restore.png"));
+                btnMax.setIcon(new ImageIcon(getClass().getResource("/images/restore.png")));
             } else {
                 setBounds(windowBoundsBeforeMaximize);
                 setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
                 isMaximized = false;
-                btnMax.setIcon(new ImageIcon("src/main/resources/images/maximize.png"));
+                btnMax.setIcon(new ImageIcon(getClass().getResource("/images/maximize.png")));
             }
         });
         buttons.add(btnMax);
 
-        JButton btnClose = new JButton(new ImageIcon("src/main/resources/images/close.png"));
+        JButton btnClose = new JButton(new ImageIcon(getClass().getResource("/images/close.png")));
         btnClose.setToolTipText("Fechar");
         btnClose.setFocusPainted(false);
         btnClose.setBorderPainted(false);
