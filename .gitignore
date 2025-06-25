@@ -1,2 +1,10 @@
 ## usuario
 usuarios.dat
+
+# Ignorar arquivos de persistência
+*.dat
+
+# Ignorar pasta de arquivos compilados
+bin/
+
+out/
