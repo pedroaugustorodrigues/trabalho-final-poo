@@ -10,6 +10,7 @@ import java.awt.*;
  * @author Rafael
  */
 public class FinalizarCompraWizard extends JDialog {
+    @SuppressWarnings("unused")
     private int etapa = 1;
     private String formaPagamento = "";
     private String endereco = "";
@@ -55,6 +56,7 @@ public class FinalizarCompraWizard extends JDialog {
     /**
      * Etapa 1: Seleção da forma de pagamento.
      */
+    @SuppressWarnings("unused")
     private void criarEtapa1() {
         mainPanel.removeAll();
         lblTitulo.setText("Selecione a forma de pagamento");
@@ -105,6 +107,7 @@ public class FinalizarCompraWizard extends JDialog {
     /**
      * Etapa 2: Informar endereço de entrega.
      */
+    @SuppressWarnings("unused")
     private void criarEtapa2() {
         mainPanel.removeAll();
         lblTitulo.setText("Informe o endereço de entrega");
@@ -145,6 +148,7 @@ public class FinalizarCompraWizard extends JDialog {
     /**
      * Etapa 3: Confirmação do pedido.
      */
+    @SuppressWarnings("unused")
     private void criarEtapa3() {
         mainPanel.removeAll();
         lblTitulo.setText("Confirmação do Pedido");

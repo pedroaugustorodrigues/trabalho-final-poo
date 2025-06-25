@@ -104,6 +104,10 @@ public class MarcaRepository {
      * Lista todas as marcas.
      */
     public List<Marca> listar() {
+        // Recarrega os dados do arquivo para garantir que está atualizado
+        List<Marca> marcasAtualizadas = carregarDoArquivo();
+        marcas.clear();
+        marcas.addAll(marcasAtualizadas);
         return new ArrayList<>(marcas);
     }
 

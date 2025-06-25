@@ -33,6 +33,7 @@ public class ClienteDashboardGUI extends JFrame {
     // Cores do GestorDashboardGUI
     private static final Color SIDEBAR_BG = new Color(23, 34, 58);
     private static final Color CONTENT_BG = new Color(240, 242, 245);
+    @SuppressWarnings("unused")
     private static final Color CARD_BG = Color.WHITE;
     private static final Color ROXO_TOPO = new Color(108, 99, 255);
     private static final Color ROXO_SELECIONADO = new Color(120, 100, 255);
@@ -144,6 +145,7 @@ public class ClienteDashboardGUI extends JFrame {
     /**
      * Cria um botão da barra lateral.
      */
+    @SuppressWarnings("unused")
     private JButton createSidebarButton(String text, String cardName, Color selectedColor, Color bgColor) {
         JButton button = new JButton(text);
 

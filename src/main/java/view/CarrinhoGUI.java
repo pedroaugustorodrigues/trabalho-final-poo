@@ -57,6 +57,7 @@ public class CarrinhoGUI extends JFrame {
     /**
      * Cria o painel do topo com título e botão de voltar.
      */
+    @SuppressWarnings("unused")
     private JPanel criarTopo() {
         JPanel topo = new JPanel();
         topo.setLayout(new BoxLayout(topo, BoxLayout.Y_AXIS));
@@ -114,6 +115,7 @@ public class CarrinhoGUI extends JFrame {
     /**
      * Cria o rodapé com total e botão de finalizar compra.
      */
+    @SuppressWarnings("unused")
     private JPanel criarRodape() {
         JPanel rodape = new JPanel(new BorderLayout());
         rodape.setBackground(CINZA_CLARO);
@@ -137,6 +139,7 @@ public class CarrinhoGUI extends JFrame {
     /**
      * Abre o modal de seleção de forma de pagamento.
      */
+    @SuppressWarnings("unused")
     private void abrirModalPagamento() {
         if (carrinho.isVazio()) {
             JOptionPane.showMessageDialog(this, "Seu carrinho está vazio.");

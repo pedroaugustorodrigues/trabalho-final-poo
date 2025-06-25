@@ -55,6 +55,10 @@ public class VendaRepository {
      * Lista todas as vendas.
      */
     public List<Venda> listar() {
+        // Recarrega os dados do arquivo para garantir que está atualizado
+        List<Venda> vendasAtualizadas = carregarDoArquivo();
+        vendas.clear();
+        vendas.addAll(vendasAtualizadas);
         return new ArrayList<>(vendas);
     }
 

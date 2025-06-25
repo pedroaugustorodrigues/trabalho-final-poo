@@ -82,6 +82,7 @@ public class RegisterGUI extends JDialog {
     /**
      * Cria o painel de cabeçalho com título e botão de fechar.
      */
+    @SuppressWarnings("unused")
     private JPanel createHeaderPanel() {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(COR_PRINCIPAL);
@@ -104,6 +105,7 @@ public class RegisterGUI extends JDialog {
     /**
      * Cria o painel de conteúdo com campos de cadastro.
      */
+    @SuppressWarnings("unused")
     private JPanel createContentPanel() {
         JPanel contentPanel = new JPanel(new GridBagLayout());
         contentPanel.setBackground(COR_FUNDO);

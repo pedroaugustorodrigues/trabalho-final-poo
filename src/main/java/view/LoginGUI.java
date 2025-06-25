@@ -25,6 +25,7 @@ public class LoginGUI extends JFrame {
     private JPanel mainPanel;
     private JPanel leftPanel;
     private JPanel rightPanel;
+    @SuppressWarnings("unused")
     private boolean mostrandoLogin = true;
 
     // Cores padrão da interface
@@ -107,6 +108,7 @@ public class LoginGUI extends JFrame {
     /**
      * Cria o painel direito (login).
      */
+    @SuppressWarnings("unused")
     private JPanel createRightPanel() {
         JPanel rightPanel = new JPanel();
         rightPanel.setBackground(COR_FUNDO_DIREITO);
@@ -211,6 +213,7 @@ public class LoginGUI extends JFrame {
     /**
      * Cria o botão de sair (fechar janela).
      */
+    @SuppressWarnings("unused")
     private JButton createExitButton() {
         JButton button = new JButton();
         try {
@@ -254,6 +257,7 @@ public class LoginGUI extends JFrame {
     /**
      * Cria o painel de registro de usuário.
      */
+    @SuppressWarnings("unused")
     private JPanel createRegisterPanel() {
         JPanel registerPanel = new JPanel();
         registerPanel.setBackground(COR_FUNDO_DIREITO);

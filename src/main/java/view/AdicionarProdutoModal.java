@@ -296,6 +296,7 @@ public class AdicionarProdutoModal extends JDialog {
     /**
      * Inicializa listeners dos botões e campos.
      */
+    @SuppressWarnings("unused")
     private void setupListeners() {
         btnAdicionarCategoria.addActionListener(e -> adicionarCategoria());
         btnAdicionarMarca.addActionListener(e -> adicionarMarca());

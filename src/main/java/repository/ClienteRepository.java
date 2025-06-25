@@ -69,7 +69,11 @@ public class ClienteRepository {
      * Lista todos os clientes.
      */
     public List<Cliente> listar() {
-        return clientes;
+        // Recarrega os dados do arquivo para garantir que está atualizado
+        List<Cliente> clientesAtualizados = carregarDoArquivo();
+        clientes.clear();
+        clientes.addAll(clientesAtualizados);
+        return new ArrayList<>(clientes);
     }
 
     /**

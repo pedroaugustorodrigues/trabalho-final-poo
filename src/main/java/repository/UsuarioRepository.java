@@ -88,6 +88,10 @@ public class UsuarioRepository {
      * Lista todos os usuários.
      */
     public List<Usuario> listarTodos() {
+        // Recarrega os dados do arquivo para garantir que está atualizado
+        List<Usuario> usuariosAtualizados = carregarUsuarios();
+        usuarios.clear();
+        usuarios.addAll(usuariosAtualizados);
         return new ArrayList<>(usuarios);
     }
 

@@ -113,6 +113,7 @@ public class ConfiguracoesGUI extends JPanel {
     /**
      * Cria a seção de opções do sistema (alterar senha, sair).
      */
+    @SuppressWarnings("unused")
     private JPanel createSystemOptionsSection() {
         JPanel section = new JPanel();
         section.setLayout(new BorderLayout());
@@ -190,6 +191,7 @@ public class ConfiguracoesGUI extends JPanel {
     /**
      * Abre o diálogo para alterar a senha do usuário.
      */
+    @SuppressWarnings("unused")
     private void alterarSenha() {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Alterar Senha", true);
         dialog.setLayout(new BorderLayout());

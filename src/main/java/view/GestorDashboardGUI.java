@@ -22,6 +22,7 @@ public class GestorDashboardGUI extends JFrame {
 
     private static final Color CONTENT_BG = new Color(240, 242, 245);
     private final VendaRepository vendaRepository;
+    @SuppressWarnings("unused")
     private final Usuario usuarioAtual;
     
     private JPanel contentPanel;
@@ -118,6 +119,7 @@ public class GestorDashboardGUI extends JFrame {
     /**
      * Cria um botão da barra lateral.
      */
+    @SuppressWarnings("unused")
     private JButton createSidebarButton(String text, String cardName, Color selectedColor, Color bgColor) {
         JButton button = new JButton(text);
 
@@ -404,6 +406,7 @@ public class GestorDashboardGUI extends JFrame {
     /**
      * Cria a barra de título customizada da janela.
      */
+    @SuppressWarnings("unused")
     private JPanel createCustomTitleBar() {
         JPanel titleBar = new JPanel();
         titleBar.setLayout(new BorderLayout());

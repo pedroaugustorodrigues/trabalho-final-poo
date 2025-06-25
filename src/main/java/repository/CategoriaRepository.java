@@ -101,6 +101,10 @@ public class CategoriaRepository {
      * Lista todas as categorias.
      */
     public List<Categoria> listar() {
+        // Recarrega os dados do arquivo para garantir que está atualizado
+        List<Categoria> categoriasAtualizadas = carregarDoArquivo();
+        categorias.clear();
+        categorias.addAll(categoriasAtualizadas);
         return new ArrayList<>(categorias);
     }
 

@@ -5,7 +5,6 @@ import main.java.model.Marca;
 import main.java.model.Produto;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
