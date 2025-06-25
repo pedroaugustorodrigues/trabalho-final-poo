@@ -25,6 +25,7 @@ import java.util.List;
 public class ClienteDashboardGUI extends JFrame {
     private JPanel produtosPanel;
     private JPanel carrinhoPanel;
+    private JPanel historicoPanel;
     private ProdutoRepository produtoRepository;
     private Carrinho carrinho;
     private Usuario usuarioAtual;
@@ -94,7 +95,8 @@ public class ClienteDashboardGUI extends JFrame {
         contentPanel.add(createHomePanel(), "INICIO");
         contentPanel.add(createProdutosPanel(), "PRODUTOS");
         contentPanel.add(createCarrinhoPanel(), "CARRINHO");
-        contentPanel.add(createHistoricoPanel(), "HISTORICO");
+        historicoPanel = createHistoricoPanel();
+        contentPanel.add(historicoPanel, "HISTORICO");
         contentPanel.add(createConfiguracoesPanel(), "CONFIGURACOES");
         
         contentPane.add(contentPanel, BorderLayout.CENTER);
@@ -229,7 +231,10 @@ public class ClienteDashboardGUI extends JFrame {
 
         actionsPanel.add(createActionButton("Ver Produtos", "/images/action_new_product.png", () -> showPanel("PRODUTOS")));
         actionsPanel.add(createActionButton("Meu Carrinho", "/images/action_new_sale.png", () -> showPanel("CARRINHO")));
-        actionsPanel.add(createActionButton("Histórico", "/images/action_search_sale.png", () -> showPanel("HISTORICO")));
+        actionsPanel.add(createActionButton("Histórico", "/images/action_search_sale.png", () -> {
+            atualizarHistorico();
+            showPanel("HISTORICO");
+        }));
         
         return actionsPanel;
     }
@@ -796,12 +801,7 @@ public class ClienteDashboardGUI extends JFrame {
         finalizarBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         finalizarBtn.addActionListener(e -> {
             if (!carrinho.getItens().isEmpty()) {
-                FinalizarCompraWizard wizard = new FinalizarCompraWizard(
-                    (JFrame) SwingUtilities.getWindowAncestor(this),
-                    carrinho.getTotal(),
-                    () -> finalizarCompra()
-                );
-                wizard.setVisible(true);
+                finalizarCompra();
             }
         });
         finalizarBtn.setEnabled(!carrinho.getItens().isEmpty());
@@ -1015,6 +1015,11 @@ public class ClienteDashboardGUI extends JFrame {
     }
 
     private void showPanel(String panelName) {
+        // Se estiver navegando para o histórico, atualizar os dados
+        if (panelName.equals("HISTORICO")) {
+            atualizarHistorico();
+        }
+        
         cardLayout.show(contentPanel, panelName);
         contentPanel.revalidate();
         contentPanel.repaint();
@@ -1116,9 +1121,7 @@ public class ClienteDashboardGUI extends JFrame {
                 for (main.java.model.CarrinhoItem item : carrinho.getItens()) {
                     main.java.model.ItemVenda itemVenda = new main.java.model.ItemVenda(
                         item.getProduto(),
-                        item.getQuantidade(),
-                        null,
-                        null
+                        item.getQuantidade()
                     );
                     itensVenda.add(itemVenda);
                     main.java.model.Produto produto = item.getProduto();
@@ -1132,6 +1135,22 @@ public class ClienteDashboardGUI extends JFrame {
                 carrinho.limpar();
                 carregarProdutos();
                 atualizarCarrinhoPanel();
+                
+                // Atualizar dashboard do gestor em tempo real
+                main.java.view.GestorDashboardGUI.atualizarDashboardSeAtivo();
+                
+                // Atualizar histórico do cliente em tempo real
+                atualizarHistorico();
+                
+                // Atualizar seleção da sidebar para HISTORICO
+                selectedSidebar = "HISTORICO";
+                for (JButton btn : sidebarButtons) {
+                    String btnCard = (String) btn.getClientProperty("cardName");
+                    btn.setBackground(selectedSidebar.equals(btnCard) ? ROXO_SELECIONADO : SIDEBAR_BG);
+                }
+                
+                showPanel("HISTORICO");
+                
                 JOptionPane.showMessageDialog(this,
                     "✅ Compra finalizada com sucesso!\n\n" +
                     "Total: R$ " + String.format("%.2f", venda.getTotal()) + "\n" +
@@ -1139,7 +1158,6 @@ public class ClienteDashboardGUI extends JFrame {
                     "Data: " + venda.getData().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
                     "Compra Realizada",
                     JOptionPane.INFORMATION_MESSAGE);
-                showPanel("HISTORICO");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this,
                     "❌ Erro ao finalizar compra: " + e.getMessage(),
@@ -1329,5 +1347,28 @@ public class ClienteDashboardGUI extends JFrame {
         dialog.pack();
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
+    }
+
+    /**
+     * Atualiza o painel de histórico com as vendas mais recentes.
+     */
+    private void atualizarHistorico() {
+        if (historicoPanel != null) {
+            // Remover o painel antigo
+            contentPanel.remove(historicoPanel);
+            
+            // Criar novo painel com dados atualizados
+            historicoPanel = createHistoricoPanel();
+            contentPanel.add(historicoPanel, "HISTORICO");
+            
+            // Se estiver no painel de histórico, mostrar o novo
+            if (selectedSidebar.equals("HISTORICO")) {
+                cardLayout.show(contentPanel, "HISTORICO");
+            }
+            
+            // Forçar revalidação e repintura
+            contentPanel.revalidate();
+            contentPanel.repaint();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package main.java.view;
 
 import main.java.model.Venda;
+import main.java.model.ItemVenda;
 import main.java.repository.VendaRepository;
 
 import javax.swing.*;
@@ -48,7 +49,7 @@ public class VendasGUI extends JPanel {
             new EmptyBorder(20, 20, 20, 20)
         ));
 
-        String[] colunas = {"Cód. da Venda", "Total", "Data", "Nome Cliente", "CPF Cliente"};
+        String[] colunas = {"Cód. da Venda", "Total", "Data", "Nome Cliente", "CPF Cliente", "Quantidade"};
         tableModel = new DefaultTableModel(colunas, 0) {
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -78,8 +79,9 @@ public class VendasGUI extends JPanel {
         table.getColumnModel().getColumn(0).setPreferredWidth(120);
         table.getColumnModel().getColumn(1).setPreferredWidth(120);
         table.getColumnModel().getColumn(2).setPreferredWidth(180);
-        table.getColumnModel().getColumn(3).setPreferredWidth(250);
+        table.getColumnModel().getColumn(3).setPreferredWidth(200);
         table.getColumnModel().getColumn(4).setPreferredWidth(150);
+        table.getColumnModel().getColumn(5).setPreferredWidth(120);
 
         table.getTableHeader().setResizingAllowed(false);
 
@@ -174,9 +176,16 @@ public class VendasGUI extends JPanel {
         for (Venda venda : vendas) {
             String nomeCliente = "N/A";
             String cpfCliente = "N/A";
+            int quantidadeTotal = 0;
+            
             if(venda.getCliente() != null) {
                 nomeCliente = venda.getCliente().getNome();
                 cpfCliente = venda.getCliente().getCpf();
+            }
+            
+            // Calcular quantidade total de itens na venda
+            for (ItemVenda item : venda.getItens()) {
+                quantidadeTotal += item.getQuantidade();
             }
 
             tableModel.addRow(new Object[]{
@@ -184,7 +193,8 @@ public class VendasGUI extends JPanel {
                     String.format("R$ %.2f", venda.getTotal()),
                     venda.getData().format(formatter),
                     nomeCliente,
-                    cpfCliente
+                    cpfCliente,
+                    quantidadeTotal
             });
         }
     }
@@ -197,6 +207,9 @@ public class VendasGUI extends JPanel {
         NovaVendaGUI novaVendaGUI = new NovaVendaGUI((Frame)owner);
         novaVendaGUI.setVisible(true);
         loadVendas();
+        
+        // Atualizar dashboard do gestor em tempo real
+        main.java.view.GestorDashboardGUI.atualizarDashboardSeAtivo();
     }
 
     /**
@@ -217,6 +230,10 @@ public class VendasGUI extends JPanel {
             if (confirm == JOptionPane.YES_OPTION) {
                 vendaRepository.removerPorId(vendaId);
                 loadVendas();
+                
+                // Atualizar dashboard do gestor em tempo real
+                main.java.view.GestorDashboardGUI.atualizarDashboardSeAtivo();
+                
                 JOptionPane.showMessageDialog(this, "Venda removida com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
@@ -225,5 +242,13 @@ public class VendasGUI extends JPanel {
                     "Nenhuma Venda Selecionada", 
                     JOptionPane.WARNING_MESSAGE);
         }
+    }
+
+    /**
+     * Método público para atualizar a tabela de vendas.
+     * Pode ser chamado externamente para atualizar em tempo real.
+     */
+    public void atualizarTabela() {
+        loadVendas();
     }
 } 

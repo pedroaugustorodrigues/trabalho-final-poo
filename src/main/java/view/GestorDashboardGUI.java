@@ -36,6 +36,9 @@ public class GestorDashboardGUI extends JFrame {
 
     private JPanel summaryPanel;
 
+    // Referência estática para permitir acesso externo
+    private static GestorDashboardGUI instance;
+
     /**
      * Construtor do dashboard do gestor.
      * @param usuarioAtual usuário logado (deve ser Gestor)
@@ -52,6 +55,10 @@ public class GestorDashboardGUI extends JFrame {
         
         this.usuarioAtual = usuarioAtual;
         this.vendaRepository = new VendaRepository();
+        
+        // Armazenar referência da instância
+        instance = this;
+        
         setTitle("Backoffice");
         setSize(1200, 800);
         setLocationRelativeTo(null);
@@ -413,7 +420,7 @@ public class GestorDashboardGUI extends JFrame {
         titleBar.setBackground(new Color(108, 99, 255));
         titleBar.setPreferredSize(new Dimension(getWidth(), 60));
 
-        JLabel title = new JLabel("  Sistema de Gestão de Loja de Roupas");
+        JLabel title = new JLabel("  Sistema de Gestão de Eletrônicos");
         title.setForeground(Color.WHITE);
         title.setFont(new Font("SansSerif", Font.BOLD, 18));
         titleBar.add(title, BorderLayout.WEST);
@@ -481,5 +488,30 @@ public class GestorDashboardGUI extends JFrame {
         return titleBar;
     }
 
+    /**
+     * Método público para atualizar os dados do dashboard em tempo real.
+     * Pode ser chamado externamente quando uma nova venda é realizada.
+     */
+    public void atualizarDashboard() {
+        if (summaryPanel != null) {
+            loadDashboardData();
+        }
+    }
 
+    /**
+     * Método estático para obter a instância atual do dashboard.
+     * Permite acesso externo para atualizações.
+     */
+    public static GestorDashboardGUI getInstance() {
+        return instance;
+    }
+
+    /**
+     * Método estático para atualizar o dashboard se estiver ativo.
+     */
+    public static void atualizarDashboardSeAtivo() {
+        if (instance != null) {
+            instance.atualizarDashboard();
+        }
+    }
 }

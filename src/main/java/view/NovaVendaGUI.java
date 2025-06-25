@@ -11,6 +11,7 @@ import main.java.repository.VendaRepository;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.SpinnerNumberModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,9 @@ public class NovaVendaGUI extends JDialog {
     private final List<ItemVenda> carrinho = new ArrayList<>();
 
     private JTextField cpfField, nomeClienteField;
-    private JTextField codProdutoField, nomeProdutoField, marcaField, tamanhoField, corField, precoField, qtdField;
+    private JTextField codProdutoField, nomeProdutoField, marcaField, precoField;
+    private JSpinner qtdSpinner;
+    private JLabel estoqueLabel;
     private JLabel totalVendaLabel;
     private DefaultTableModel carrinhoTableModel;
     private JTable carrinhoTable;
@@ -147,22 +150,20 @@ public class NovaVendaGUI extends JDialog {
         marcaField = new JTextField(); marcaField.setEditable(false);
         gbc.gridx = 1; gbc.gridy = 2; gbc.gridwidth = 3; panel.add(marcaField, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 3; panel.add(new JLabel("Tamanho:"), gbc);
-        tamanhoField = new JTextField(); tamanhoField.setEditable(true);
-        gbc.gridx = 1; gbc.gridy = 3; panel.add(tamanhoField, gbc);
-
-        gbc.gridx = 2; gbc.gridy = 3; panel.add(new JLabel("Cor:"), gbc);
-        corField = new JTextField(); corField.setEditable(true);
-        gbc.gridx = 3; gbc.gridy = 3; panel.add(corField, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 4; panel.add(new JLabel("Preço:"), gbc);
+        gbc.gridx = 0; gbc.gridy = 3; panel.add(new JLabel("Preço:"), gbc);
         precoField = new JTextField(); precoField.setEditable(false);
-        gbc.gridx = 1; gbc.gridy = 4; panel.add(precoField, gbc);
+        gbc.gridx = 1; gbc.gridy = 3; panel.add(precoField, gbc);
 
-        gbc.gridx = 2; gbc.gridy = 4; panel.add(new JLabel("Qtd:"), gbc);
-        qtdField = new JTextField("1");
-        gbc.gridx = 3; gbc.gridy = 4; panel.add(qtdField, gbc);
+        gbc.gridx = 2; gbc.gridy = 3; panel.add(new JLabel("Qtd:"), gbc);
+        qtdSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
+        gbc.gridx = 3; gbc.gridy = 3; panel.add(qtdSpinner, gbc);
 
+        gbc.gridx = 0; gbc.gridy = 4; panel.add(new JLabel("Estoque:"), gbc);
+        estoqueLabel = new JLabel("0 unidades");
+        estoqueLabel.setForeground(new Color(100, 100, 100));
+        gbc.gridx = 1; gbc.gridy = 4; gbc.gridwidth = 3; panel.add(estoqueLabel, gbc);
+
+        gbc.gridwidth = 1;
         gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 4; gbc.fill = GridBagConstraints.NONE; gbc.anchor = GridBagConstraints.CENTER;
         JButton addCarrinhoBtn = new JButton("Adicionar ao Carrinho");
         addCarrinhoBtn.addActionListener(e -> adicionarAoCarrinho());
@@ -177,7 +178,7 @@ public class NovaVendaGUI extends JDialog {
     private JPanel createCarrinhoPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(new TitledBorder("Carrinho de Compras"));
-        String[] columns = {"Código", "Produto", "Marca", "Tam.", "Cor", "Preço", "Qtd", "Subtotal"};
+        String[] columns = {"Código", "Produto", "Marca", "Preço Unit.", "Qtd", "Subtotal"};
         carrinhoTableModel = new DefaultTableModel(columns, 0){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -207,6 +208,12 @@ public class NovaVendaGUI extends JDialog {
     @SuppressWarnings("unused")
     private JPanel createActionsPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        
+        JButton limparCarrinhoBtn = new JButton("Limpar Carrinho");
+        limparCarrinhoBtn.setBackground(new Color(255, 193, 7));
+        limparCarrinhoBtn.setForeground(Color.WHITE);
+        limparCarrinhoBtn.addActionListener(e -> limparCarrinho());
+        
         JButton pagamentoBtn = new JButton("Pagamento");
         pagamentoBtn.setBackground(new Color(46, 204, 113));
         pagamentoBtn.setForeground(Color.WHITE);
@@ -217,6 +224,7 @@ public class NovaVendaGUI extends JDialog {
         cancelarBtn.setForeground(Color.WHITE);
         cancelarBtn.addActionListener(e -> dispose());
         
+        panel.add(limparCarrinhoBtn);
         panel.add(pagamentoBtn);
         panel.add(cancelarBtn);
         return panel;
@@ -251,9 +259,19 @@ public class NovaVendaGUI extends JDialog {
                 nomeProdutoField.setText(produtoSelecionado.getDescricao());
                 marcaField.setText(produtoSelecionado.getMarca().getNome());
                 precoField.setText(String.format("%.2f", produtoSelecionado.getPreco()));
+                
+                // Atualizar o spinner de quantidade baseado no estoque disponível
+                int estoqueDisponivel = produtoSelecionado.getQtd();
+                qtdSpinner.setModel(new SpinnerNumberModel(1, 1, estoqueDisponivel, 1));
+                estoqueLabel.setText(estoqueDisponivel + " unidades disponíveis");
+                estoqueLabel.setForeground(estoqueDisponivel > 0 ? new Color(32, 201, 151) : new Color(230, 86, 86));
+                
             } else {
                 JOptionPane.showMessageDialog(this, "Produto não encontrado.");
                 produtoSelecionado = null;
+                qtdSpinner.setModel(new SpinnerNumberModel(1, 1, 100, 1));
+                estoqueLabel.setText("0 unidades");
+                estoqueLabel.setForeground(new Color(100, 100, 100));
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Código do produto inválido.");
@@ -269,7 +287,7 @@ public class NovaVendaGUI extends JDialog {
             return;
         }
         try {
-            int qtd = Integer.parseInt(qtdField.getText());
+            int qtd = (int) qtdSpinner.getValue();
             if(qtd <= 0) {
                  JOptionPane.showMessageDialog(this, "Quantidade deve ser positiva.");
                  return;
@@ -279,22 +297,29 @@ public class NovaVendaGUI extends JDialog {
                 return;
             }
 
-            String tamanho = tamanhoField.getText();
-            String cor = corField.getText();
-
-            ItemVenda item = new ItemVenda(produtoSelecionado, qtd, tamanho, cor);
+            ItemVenda item = new ItemVenda(produtoSelecionado, qtd);
             carrinho.add(item);
             
             carrinhoTableModel.addRow(new Object[]{
                 item.getProduto().getId(),
                 item.getProduto().getDescricao(),
                 item.getProduto().getMarca().getNome(),
-                item.getTamanho(),
-                item.getCor(),
                 String.format("R$ %.2f", item.getProduto().getPreco()),
                 item.getQuantidade(),
                 String.format("R$ %.2f", item.getSubtotal())
             });
+
+            // Atualizar estoque disponível
+            int novoEstoque = produtoSelecionado.getQtd() - qtd;
+            estoqueLabel.setText(novoEstoque + " unidades disponíveis");
+            estoqueLabel.setForeground(novoEstoque > 0 ? new Color(32, 201, 151) : new Color(230, 86, 86));
+            
+            // Atualizar spinner se necessário
+            if (novoEstoque > 0) {
+                qtdSpinner.setModel(new SpinnerNumberModel(1, 1, novoEstoque, 1));
+            } else {
+                qtdSpinner.setModel(new SpinnerNumberModel(0, 0, 0, 1));
+            }
 
             atualizarTotal();
             limparCamposProduto();
@@ -320,10 +345,33 @@ public class NovaVendaGUI extends JDialog {
         codProdutoField.setText("");
         nomeProdutoField.setText("");
         marcaField.setText("");
-        tamanhoField.setText("");
-        corField.setText("");
         precoField.setText("");
-        qtdField.setText("1");
+        qtdSpinner.setValue(1);
+        estoqueLabel.setText("0 unidades");
+        estoqueLabel.setForeground(new Color(100, 100, 100));
+    }
+
+    /**
+     * Limpa todos os itens do carrinho.
+     */
+    private void limparCarrinho() {
+        if (carrinho.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "O carrinho já está vazio.");
+            return;
+        }
+        
+        int confirmacao = JOptionPane.showConfirmDialog(this,
+            "Tem certeza que deseja limpar o carrinho?",
+            "Confirmar Limpeza",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+            
+        if (confirmacao == JOptionPane.YES_OPTION) {
+            carrinho.clear();
+            carrinhoTableModel.setRowCount(0);
+            atualizarTotal();
+            JOptionPane.showMessageDialog(this, "Carrinho limpo com sucesso!");
+        }
     }
 
     /**
@@ -335,17 +383,50 @@ public class NovaVendaGUI extends JDialog {
             return;
         }
 
-        Venda novaVenda = new Venda(clienteSelecionado, new ArrayList<>(carrinho));
-        
-        for(ItemVenda item : carrinho) {
-            Produto p = item.getProduto();
-            p.setQtd(p.getQtd() - item.getQuantidade());
-            produtoRepository.atualizar(p);
+        if (clienteSelecionado == null) {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente para a venda.");
+            return;
         }
 
-        vendaRepository.adicionar(novaVenda);
+        // Criar resumo da venda
+        StringBuilder resumo = new StringBuilder();
+        resumo.append("RESUMO DA VENDA\n\n");
+        resumo.append("Cliente: ").append(clienteSelecionado.getNome()).append("\n");
+        resumo.append("CPF: ").append(clienteSelecionado.getCpf()).append("\n\n");
+        resumo.append("ITENS:\n");
         
-        JOptionPane.showMessageDialog(this, "Venda realizada com sucesso!");
-        dispose();
+        double total = 0;
+        for (ItemVenda item : carrinho) {
+            resumo.append("• ").append(item.getProduto().getDescricao())
+                  .append(" - Qtd: ").append(item.getQuantidade())
+                  .append(" - R$ ").append(String.format("%.2f", item.getSubtotal())).append("\n");
+            total += item.getSubtotal();
+        }
+        
+        resumo.append("\nTOTAL: R$ ").append(String.format("%.2f", total));
+        
+        int confirmacao = JOptionPane.showConfirmDialog(this,
+            resumo.toString(),
+            "Confirmar Venda",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.INFORMATION_MESSAGE);
+            
+        if (confirmacao == JOptionPane.YES_OPTION) {
+            Venda novaVenda = new Venda(clienteSelecionado, new ArrayList<>(carrinho));
+            
+            for(ItemVenda item : carrinho) {
+                Produto p = item.getProduto();
+                p.setQtd(p.getQtd() - item.getQuantidade());
+                produtoRepository.atualizar(p);
+            }
+
+            vendaRepository.adicionar(novaVenda);
+            
+            // Atualizar dashboard do gestor em tempo real
+            main.java.view.GestorDashboardGUI.atualizarDashboardSeAtivo();
+            
+            JOptionPane.showMessageDialog(this, "Venda realizada com sucesso!");
+            dispose();
+        }
     }
 }

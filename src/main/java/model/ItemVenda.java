@@ -22,6 +22,17 @@ public class ItemVenda implements Serializable {
         this.cor = cor;
     }
 
+    /**
+     * Construtor alternativo sem tamanho e cor.
+     */
+    public ItemVenda(Produto produto, int quantidade) {
+        this.produto = produto;
+        this.quantidade = quantidade;
+        this.subtotal = produto.getPreco() * quantidade;
+        this.tamanho = null;
+        this.cor = null;
+    }
+
     public String getTamanho() {
         return tamanho;
     }
@@ -68,8 +79,6 @@ public class ItemVenda implements Serializable {
                 "produto=" + produto.getDescricao() +
                 ", quantidade=" + quantidade +
                 ", subtotal=" + subtotal +
-                ", tamanho='" + tamanho + '\'' +
-                ", cor='" + cor + '\'' +
                 '}';
     }
 } 

@@ -11,11 +11,9 @@ class ItemVendaTest {
     @Test
     void testSubtotal() {
         Produto p = new Produto("Notebook", new Categoria("Eletrônico"), new Marca("Dell"), 3200, 15);
-        ItemVenda item = new ItemVenda(p, 5, "15,6 polegadas", "Cinza");
+        ItemVenda item = new ItemVenda(p, 5);
         assertEquals(p, item.getProduto());
         assertEquals(5, item.getQuantidade());
-        assertEquals("15,6 polegadas", item.getTamanho());
-        assertEquals("Cinza", item.getCor());
         assertEquals(16000.0, item.getSubtotal());
     }
 }

@@ -175,7 +175,6 @@ public class FinalizarCompraWizard extends JDialog {
         btnConfirmar.setFont(new Font("SansSerif", Font.BOLD, 15));
         btnConfirmar.addActionListener(e -> {
             if (onConfirmar != null) onConfirmar.run();
-            JOptionPane.showMessageDialog(this, "Compra finalizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             dispose();
         });
         south.add(btnVoltar);

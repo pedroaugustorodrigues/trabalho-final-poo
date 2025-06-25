@@ -73,6 +73,11 @@ public class VendaRepository {
      * Lista todas as vendas de um cliente.
      */
     public List<Venda> listarPorCliente(main.java.model.Cliente cliente) {
+        // Recarrega os dados do arquivo para garantir que está atualizado
+        List<Venda> vendasAtualizadas = carregarDoArquivo();
+        vendas.clear();
+        vendas.addAll(vendasAtualizadas);
+        
         return vendas.stream()
                 .filter(v -> v.getCliente() != null && v.getCliente().getId() == cliente.getId())
                 .collect(java.util.stream.Collectors.toList());
