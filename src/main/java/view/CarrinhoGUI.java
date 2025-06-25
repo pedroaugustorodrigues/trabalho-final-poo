@@ -163,7 +163,7 @@ public class CarrinhoGUI extends JFrame {
         botoesPanel.setLayout(new BoxLayout(botoesPanel, BoxLayout.X_AXIS));
         botoesPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         // Pix
-        ImageIcon pixIcon = new ImageIcon(new ImageIcon("src/main/resources/images/logo-pix-icone-1024.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
+        ImageIcon pixIcon = new ImageIcon(new ImageIcon(getClass().getResource("/images/logo-pix-icone-1024.png")).getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
         JLabel imgPix = new JLabel(pixIcon);
         JToggleButton btnPix = new JToggleButton("Pix");
         btnPix.setBackground(AZUL_ESCURO);
@@ -176,7 +176,7 @@ public class CarrinhoGUI extends JFrame {
         pixBox.add(Box.createVerticalStrut(5));
         pixBox.add(btnPix);
         // Cartão
-        ImageIcon cartaoIcon = new ImageIcon(new ImageIcon("src/main/resources/images/vector-credit-card-icon.jpg").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
+        ImageIcon cartaoIcon = new ImageIcon(new ImageIcon(getClass().getResource("/images/vector-credit-card-icon.jpg")).getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
         JLabel imgCartao = new JLabel(cartaoIcon);
         JToggleButton btnCartao = new JToggleButton("Cartão");
         btnCartao.setBackground(AZUL_ESCURO);

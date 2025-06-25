@@ -258,7 +258,7 @@ public class ClienteDashboardGUI extends JFrame {
         panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         panel.setPreferredSize(new Dimension(200, 200));
 
-        ImageIcon icon = new ImageIcon("src/main/resources" + iconPath);
+        ImageIcon icon = new ImageIcon(getClass().getResource(iconPath));
         Image scaled = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
         JLabel iconLabel = new JLabel(new ImageIcon(scaled));
         iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1058,7 +1058,7 @@ public class ClienteDashboardGUI extends JFrame {
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         buttons.setOpaque(false);
 
-        JButton btnMin = new JButton(new ImageIcon("src/main/resources/images/minimize.png"));
+        JButton btnMin = new JButton(new ImageIcon(getClass().getResource("/images/minimize.png")));
         btnMin.setToolTipText("Minimizar");
         btnMin.setFocusPainted(false);
         btnMin.setBorderPainted(false);
@@ -1067,7 +1067,7 @@ public class ClienteDashboardGUI extends JFrame {
         btnMin.addActionListener(e -> setState(JFrame.ICONIFIED));
         buttons.add(btnMin);
 
-        JButton btnMax = new JButton(new ImageIcon("src/main/resources/images/maximize.png"));
+        JButton btnMax = new JButton(new ImageIcon(getClass().getResource("/images/maximize.png")));
         btnMax.setToolTipText("Maximizar/Restaurar");
         btnMax.setFocusPainted(false);
         btnMax.setBorderPainted(false);
@@ -1081,17 +1081,17 @@ public class ClienteDashboardGUI extends JFrame {
                 setBounds(bounds);
                 setShape(null);
                 isMaximized = true;
-                btnMax.setIcon(new ImageIcon("src/main/resources/images/restore.png"));
+                btnMax.setIcon(new ImageIcon(getClass().getResource("/images/restore.png")));
             } else {
                 setBounds(windowBoundsBeforeMaximize);
                 setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
                 isMaximized = false;
-                btnMax.setIcon(new ImageIcon("src/main/resources/images/maximize.png"));
+                btnMax.setIcon(new ImageIcon(getClass().getResource("/images/maximize.png")));
             }
         });
         buttons.add(btnMax);
 
-        JButton btnClose = new JButton(new ImageIcon("src/main/resources/images/close.png"));
+        JButton btnClose = new JButton(new ImageIcon(getClass().getResource("/images/close.png")));
         btnClose.setToolTipText("Fechar");
         btnClose.setFocusPainted(false);
         btnClose.setBorderPainted(false);

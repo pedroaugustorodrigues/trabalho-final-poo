@@ -92,7 +92,7 @@ public class LoginGUI extends JFrame {
         leftPanel.add(welcomeLabel, BorderLayout.NORTH);
 
         try {
-            ImageIcon originalIcon = new ImageIcon("src/main/resources/images/illustration.png");
+            ImageIcon originalIcon = new ImageIcon(getClass().getResource("/images/illustration.png"));
             Image scaledImage = originalIcon.getImage().getScaledInstance(500, 500, Image.SCALE_SMOOTH);
             JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
             leftPanel.add(imageLabel, BorderLayout.CENTER);
@@ -171,7 +171,7 @@ public class LoginGUI extends JFrame {
         panel.setOpaque(false);
 
         try {
-            ImageIcon icon = new ImageIcon("src/main/resources" + iconPath);
+            ImageIcon icon = new ImageIcon(getClass().getResource(iconPath));
             Image scaled = icon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
             panel.add(new JLabel(new ImageIcon(scaled)), BorderLayout.WEST);
         } catch (Exception e) {
@@ -217,7 +217,7 @@ public class LoginGUI extends JFrame {
     private JButton createExitButton() {
         JButton button = new JButton();
         try {
-            ImageIcon icon = new ImageIcon("src/main/resources/images/power-off-icon.png");
+            ImageIcon icon = new ImageIcon(getClass().getResource("/images/power-off-icon.png"));
             Image scaled = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
             button.setIcon(new ImageIcon(scaled));
         } catch (Exception e) {
